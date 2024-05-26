@@ -11,6 +11,7 @@ class Aereo:
         self.rect.topleft = (pos_x, pos_y)
         self.vel_x = vel_x
         self.vel_y = vel_y
+        self.flipped = False
     
     def cordinate(self):
         return self.rect.topleft
@@ -25,10 +26,12 @@ class Aereo:
         if vel_x >= 4:
             if acc_x < 0:
                 vel_x += acc_x
+                vel_x = round(vel_x, 1)
                 return (vel_x)
         elif vel_x <= -4:
             if acc_x > 0:
                 vel_x += acc_x
+                vel_x = round(vel_x, 1)
                 return (vel_x)
         else:
             vel_x += acc_x
@@ -66,13 +69,28 @@ class Aereo:
         return (acc_y)
     
     def ruota (self, acc_y, vel_x):
-
+        if vel_x > 0:
             if acc_y == 0.2:
                 self.image1 = pygame.transform.rotate(self.image, -20)
             elif acc_y == -0.2:
                 self.image1 = pygame.transform.rotate(self.image, 20)
             else:
                 self.image1 = self.image
+        else:
+            if acc_y == 0:
+                self.flipped = pygame.transform.flip(self.image, True, False)
+                self.image1 = self.flipped
+            else:
+                self.flipped = pygame.transform.flip(self.image, True, False)
+
+                if acc_y == 0.2:
+                    self.image1 = pygame.transform.rotate(self.flipped, 20)
+                elif acc_y == -0.2:
+                    self.image1 = pygame.transform.rotate(self.flipped, -20)
+                    
+                else:
+                    self.image1 = self.image
+
 
     def stampa (self, screen, acc_y):
         screen.blit(self.image1, self.rect.topleft)
