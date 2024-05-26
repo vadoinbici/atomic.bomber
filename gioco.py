@@ -2,6 +2,14 @@ import pygame
 from sys import exit
 pygame.init()
 
+# lista_b = []
+# b_vel_y = 1
+# b_vel_x = 1
+# vel_x = 4
+# vel_y = 2
+# acc_x = 0.5
+# acc_y = 0.2
+
 class Aereo:
     def __init__(self, vel_x, vel_y, pos_x, pos_y,):
         self.image = pygame.image.load('immagini/aeroplano.png')
@@ -137,7 +145,6 @@ class Bomba:
             return True
         return False
 
-
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
 #-----------------------------------------------------------------            
@@ -157,10 +164,10 @@ prova1 = prova.get_rect()
 lista_b = []
 b_vel_y = 1
 b_vel_x = 1
-vel_x = 4
+vel_x = 2
 vel_y = 0
-acc_x = 1
-acc_y = 0.5
+acc_x = 0
+acc_y = 0
 b_controllo = False
 
 while True:
@@ -204,10 +211,6 @@ while True:
             if bomba.controllo() == True:  
                 lista_b.remove(bomba)
 
-
-            
-    
-    
     
     vel_x = aereo.velx(vel_x, acc_x)
     vel_y = aereo.vely(vel_y, acc_y)
