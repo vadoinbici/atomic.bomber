@@ -6,6 +6,7 @@ class Aereo:
     def __init__(self, vel_x, vel_y, pos_x, pos_y,):
         self.image = pygame.image.load('immagini/aeroplano.png')
         self.image = pygame.transform.scale(self.image, (100,50))
+        self.image1 = self.image
         self.rect = self.image.get_rect()      
         self.rect.topleft = (pos_x, pos_y)
         self.vel_x = vel_x
@@ -40,21 +41,21 @@ class Aereo:
         if vel_y >= 2:
             if acc_y < 0:
                 vel_y += acc_y
-                print (vel_y)
+                print (acc_y)
                 return (vel_y)
         elif vel_y <= -2:
             if acc_y > 0:
                 vel_y += acc_y
                 vel_y = round(vel_y, 1)
-                print (vel_y)
+                print (acc_y)
                 return (vel_y)
         else:
             vel_y += acc_y
             vel_y = round(vel_y, 1)
-            print (vel_y)
+            print (acc_y)
             return (vel_y)
         vel_y = round(vel_y, 1)
-        print (vel_y)
+        print (acc_y)
         return (vel_y)
     
 
@@ -63,14 +64,18 @@ class Aereo:
             acc_y = 0
             return (acc_y)
         return (acc_y)
-
-    def stampa (self, screen):
-        # if acc_y == 0
-
-
-
-        screen.blit(self.image, self.rect.topleft)
     
+    def ruota (self, acc_y, vel_x):
+
+            if acc_y == 0.2:
+                self.image1 = pygame.transform.rotate(self.image, -20)
+            elif acc_y == -0.2:
+                self.image1 = pygame.transform.rotate(self.image, 20)
+            else:
+                self.image1 = self.image
+
+    def stampa (self, screen, acc_y):
+        screen.blit(self.image1, self.rect.topleft)
 
     def controllox (self):
         if self.rect.x > 1200:
@@ -139,7 +144,8 @@ while True:
     vel_y = aereo.controlloy(vel_y)
     aereo.muoviti(vel_x, vel_y) 
     screen.blit(sfondo, (0,0))
-    aereo.stampa(screen)
+    aereo.ruota(acc_y, vel_x)
+    aereo.stampa(screen, acc_y)
     
 
 
