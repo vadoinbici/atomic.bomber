@@ -40,25 +40,35 @@ class Aereo:
         if vel_y >= 2:
             if acc_y < 0:
                 vel_y += acc_y
+                print (vel_y)
                 return (vel_y)
         elif vel_y <= -2:
             if acc_y > 0:
                 vel_y += acc_y
+                vel_y = round(vel_y, 1)
+                print (vel_y)
                 return (vel_y)
         else:
             vel_y += acc_y
-                
+            vel_y = round(vel_y, 1)
+            print (vel_y)
             return (vel_y)
+        vel_y = round(vel_y, 1)
+        print (vel_y)
         return (vel_y)
     
 
-    # def accy (self, vel_y, acc_y):
-    #     if vel_y == 0:
-    #         acc_y = 0
-    #         return (acc_y)
-    #     return (acc_y)
+    def accy (self, vel_y, acc_y):
+        if vel_y == 0:
+            acc_y = 0
+            return (acc_y)
+        return (acc_y)
 
     def stampa (self, screen):
+        # if acc_y == 0
+
+
+
         screen.blit(self.image, self.rect.topleft)
     
 
@@ -124,7 +134,7 @@ while True:
 
     vel_x = aereo.velx(vel_x, acc_x)
     vel_y = aereo.vely(vel_y, acc_y)
-    # acc_y = aereo.accy(vel_y, acc_y)
+    acc_y = aereo.accy(vel_y, acc_y)
     aereo.controllox()
     vel_y = aereo.controlloy(vel_y)
     aereo.muoviti(vel_x, vel_y) 
