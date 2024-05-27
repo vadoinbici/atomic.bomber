@@ -1,7 +1,44 @@
 import pygame
 from random import randint
 from sys import exit
+import time
 pygame.init()
+
+screen = pygame.display.set_mode((1200,600))
+pygame.display.set_caption('Atomic bomber')
+
+sfondo1 = pygame.image.load('immagini/caricamento.png')
+sfondo1 = pygame.transform.scale(sfondo1, (1200,600))
+
+barra_caricamento_colore = ('Orange')
+
+def genera_barra(screen, progresso):
+    bar_lar= 400
+    bar_alt= 50
+    bar_x=(1200-bar_lar)/2
+    bar_y=(1000-bar_alt)/2
+
+    pygame.draw.rect(screen, (255, 255, 255), (bar_x, bar_y, bar_lar, bar_alt), 2)
+    pygame.draw.rect(screen, barra_caricamento_colore,(bar_x, bar_y, bar_lar*progresso, bar_alt))
+    
+caricamento = True
+progresso = 0
+
+while caricamento:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+             pygame.quit()
+             exit()
+    screen.blit(sfondo1, (0, 0))
+
+    genera_barra(screen, progresso)
+    pygame.display.flip()
+
+    time.sleep(0.2)  
+    progresso += 0.02
+    if progresso >= 1:
+        caricamento = False
+
 
 # lista_b = []
 # b_vel_y = 1
@@ -208,8 +245,8 @@ image_case[3]= "immagini/casa33.png"
 c_lista = []
 
 aereo = Aereo (1,0,200,200)
-screen = pygame.display.set_mode((1200,600))
-pygame.display.set_caption('Atomic bomb')
+# screen = pygame.display.set_mode((1200,600))
+# pygame.display.set_caption('Atomic bomb')
 clock = pygame.time.Clock()
 
 sfondox = pygame.image.load('immagini/sfondo2.1.png').convert()
@@ -281,6 +318,7 @@ while True:
             bomba.stampa(screen)
             if bomba.controllo():  
                 lista_b.remove(bomba)
+<<<<<<< HEAD
             
             for casa_esp in e_lista_temp:  # Controlla solo le case che sono in attesa di essere rimosse
                 casa = casa_esp['casa']
@@ -302,6 +340,13 @@ while True:
 
 
             if bomba.rect.y >= 510:
+=======
+            for casa in c_lista:
+                    if bomba.rect.colliderect(casa.rect):
+                       c_lista.remove(casa)
+                       lista_b.remove(bomba)
+            if bomba.rect.y >= 510 :
+>>>>>>> 035e6287a0ddca31bec5e0d99a2fbbe112b8f7dd
                 lista_b.remove(bomba)
 
     
