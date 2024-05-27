@@ -165,11 +165,11 @@ class Casa:
     
     def crea_rect(self, x, n):
         if n == 1:
-            return pygame.Rect(x, 470, 120, 80)
+            return pygame.Rect(x, 480, 120, 80)
         elif n==2:
-            return pygame.Rect(x, 510, 70, 55)
+            return pygame.Rect(x, 505, 70, 55)
         else:
-            return pygame.Rect(x, 430, 70, 130)
+            return pygame.Rect(x, 420, 70, 130)
     
     def controllo_coll(self, nuovo_rect):
         for pos in self.posizione:
@@ -192,13 +192,13 @@ class Casa:
             self.image = pygame.image.load(self.image_case[n])
             if n == 1:
                 self.image = pygame.transform.scale(self.image, (120,80))
-                screen.blit(self.image, (x, 470))
+                screen.blit(self.image, (x, 480))
             elif n==2:
                 self.image = pygame.transform.scale(self.image, (70,50))
-                screen.blit(self.image, (x, 510))
+                screen.blit(self.image, (x, 505))
             else:
                 self.image = pygame.transform.scale(self.image, (70,130))
-                screen.blit(self.image, (x, 430))
+                screen.blit(self.image, (x, 420))
             # self.rect = self.image.get_rect()
             # screen.blit(self.image, (510,x))
             
@@ -208,7 +208,7 @@ class Casa:
 #-----------------------------------------------------------------            
 
 image_case = {}
-image_case[1]= "immagini/casa 1.png"
+image_case[1]= "immagini/casa11.png"
 image_case[2]= "immagini/casa 2.png"
 image_case[3]= "immagini/casa 3.png"
 
