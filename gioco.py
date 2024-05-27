@@ -117,7 +117,7 @@ class Aereo:
 class Bomba:
     def __init__(self, vel_x, vel_y, pos_x, pos_y):
         self.image = pygame.image.load('immagini/bomba.png')
-        self.image = pygame.transform.scale(self.image, (20,50))
+        self.image = pygame.transform.scale(self.image, (15,33))
         self.rect = self.image.get_rect()      
         self.rect.topleft = ((pos_x + 45), (pos_y + 30))
         self.b_vel_x = vel_x
@@ -165,11 +165,11 @@ class Casa:
     
     def crea_rect(self, x, n):
         if n == 1:
-            return pygame.Rect(x, 460, 150, 100)
+            return pygame.Rect(x, 470, 120, 80)
         elif n==2:
-            return pygame.Rect(x, 500, 90, 60)
+            return pygame.Rect(x, 510, 70, 55)
         else:
-            return pygame.Rect(x, 400, 90, 160)
+            return pygame.Rect(x, 430, 70, 130)
     
     def controllo_coll(self, nuovo_rect):
         for pos in self.posizione:
@@ -191,14 +191,14 @@ class Casa:
             x,n = pos
             self.image = pygame.image.load(self.image_case[n])
             if n == 1:
-                self.image = pygame.transform.scale(self.image, (150,100))
-                screen.blit(self.image, (x, 460))
+                self.image = pygame.transform.scale(self.image, (120,80))
+                screen.blit(self.image, (x, 470))
             elif n==2:
-                self.image = pygame.transform.scale(self.image, (90,60))
-                screen.blit(self.image, (x, 500))
+                self.image = pygame.transform.scale(self.image, (70,50))
+                screen.blit(self.image, (x, 510))
             else:
-                self.image = pygame.transform.scale(self.image, (90,160))
-                screen.blit(self.image, (x, 400))
+                self.image = pygame.transform.scale(self.image, (70,130))
+                screen.blit(self.image, (x, 430))
             # self.rect = self.image.get_rect()
             # screen.blit(self.image, (510,x))
             
