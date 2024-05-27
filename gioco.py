@@ -146,26 +146,56 @@ class Bomba:
             return True
         return False 
 
-# class Casa:
-#     def __init__ (self, n_case, image_case):
-#         self.n_case = n_case
-#         self.image_case = image_case
+class Casa:
+    def __init__ (self, n_case, image_case):
+        self.n_case = n_case
+        self.image_case = image_case
+        self.posizione = []
+        self.generazione_pos()
+
+    def generazione_pos (self):
+        for i in range(self.n_case):
+            while True:
+               x = randint(10,1000)
+               n = randint(1,3)
+               rect = self.crea_rect(x, n)
+               if not self.controllo_coll(rect):
+                   self.posizione.append((x, n))
+                   break
     
-#     def genera(self,screen):
-#         for i in range(self.n_case):
-#             n = randint(1,4)
-#             self.image = pygame.image.load(self.image_case[n])
-#             if n == 1:
-#                 self.image = pygame.transform.scale((150,100))
-#                 screen.blit(self.image, (510,x))
-#             elif n==2:
-#                 self.image = pygame.transform.scale((90,60))
-#                 screen.blit(self.image, (5,x))
-#             else:
-#                 self.image = pygame.transform.scale((90,160))
-#                 screen.blit(self.image, (510,x))
-#             self.rect = self.image.get_rect()
-#             screen.blit(self.image, (510,x))
+    def crea_rect(self, x, n):
+        if n == 1:
+            return pygame.Rect(x, 460, 150, 100)
+        elif n==2:
+            return pygame.Rect(x, 500, 90, 60)
+        else:
+            return pygame.Rect(x, 400, 90, 160)
+    
+    def controllo_coll(self, nuovo_rect):
+        for pos in self.posizione:
+            x, n = pos
+            esiste_rect = self.crea_rect(x, n)
+            if esiste_rect.colliderect(nuovo_rect):
+                return True
+        return False
+            
+
+    def genera(self,screen):
+        for pos in self.posizione:
+            x,n = pos
+            self.image = pygame.image.load(self.image_case[n])
+            if n == 1:
+                self.image = pygame.transform.scale(self.image, (150,100))
+                screen.blit(self.image, (x, 460))
+            elif n==2:
+                self.image = pygame.transform.scale(self.image, (90,60))
+                screen.blit(self.image, (x, 500))
+            else:
+                self.image = pygame.transform.scale(self.image, (90,160))
+                screen.blit(self.image, (x, 400))
+            # self.rect = self.image.get_rect()
+            # screen.blit(self.image, (510,x))
+            
 
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
@@ -176,16 +206,17 @@ image_case[1]= "immagini/casa 1.png"
 image_case[2]= "immagini/casa 2.png"
 image_case[3]= "immagini/casa 3.png"
 
-rett = pygame.Surface((90,160))
-rett.fill("Blue")
+# rett = pygame.Surface((90,160))
+# rett.fill("Blue")
 
-rett1 = pygame.Surface((90,60))
-rett1.fill("Red")
+# rett1 = pygame.Surface((90,60))
+# rett1.fill("Red")
 
-rett2 = pygame.Surface((150,100))
-rett2.fill("Black")
+# rett2 = pygame.Surface((150,100))
+# rett2.fill("Black")
 
-
+n_casa = randint(2,4)
+casa = Casa(n_casa, image_case)
 aereo = Aereo (1,0,200,200)
 screen = pygame.display.set_mode((1200,600))
 pygame.display.set_caption('Atomic bomb')
@@ -258,8 +289,9 @@ while True:
     aereo.muoviti(vel_x, vel_y) 
     aereo.ruota(acc_y, vel_x)
     aereo.stampa(screen, acc_y)
-    screen.blit(rett, (100,180))
-    screen.blit(rett1, (500,300))
-    screen.blit(rett2, (1000,220))
+    casa.genera(screen)
+    # screen.blit(rett, (100,400))
+    # screen.blit(rett1, (500,500))
+    # screen.blit(rett2, (1000,460))
     pygame.display.update()
     clock.tick(60)
