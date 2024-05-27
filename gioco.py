@@ -147,60 +147,47 @@ class Bomba:
         return False 
 
 class Casa:
-    def __init__ (self, n_case, image_case):
-        self.n_case = n_case
+    def __init__ (self, image_case):
         self.image_case = image_case
         self.posizione = []
         self.generazione_pos()
 
     def generazione_pos (self):
-        for i in range(self.n_case):
-            while True:
-               x = randint(10,1000)
-               n = randint(1,3)
-               rect = self.crea_rect(x, n)
-               if not self.controllo_coll(rect):
-                   self.posizione.append((x, n))
-                   break
-    
-    def crea_rect(self, x, n):
-        if n == 1:
-            return pygame.Rect(x, 470, 120, 80)
-        elif n==2:
-            return pygame.Rect(x, 510, 70, 55)
-        else:
-            return pygame.Rect(x, 430, 70, 130)
-    
-    def controllo_coll(self, nuovo_rect):
-        for pos in self.posizione:
-            x, n = pos
-            esiste_rect = self.crea_rect(x, n)
-            if esiste_rect.colliderect(nuovo_rect):
-                return True
-        return False
-    
-    def case_rect (self):
-        rect = []
-        for pos in self.posizione:
-            x, n = pos
-            rect.append(self.crea_rect(x, n))
-        return rect            
-
-    def genera(self,screen):
-        for pos in self.posizione:
-            x,n = pos
+        while True:
+            x = randint(10,1000)
+            n = randint(1,3)
             self.image = pygame.image.load(self.image_case[n])
-            if n == 1:
-                self.image = pygame.transform.scale(self.image, (120,80))
-                screen.blit(self.image, (x, 470))
-            elif n==2:
-                self.image = pygame.transform.scale(self.image, (70,50))
-                screen.blit(self.image, (x, 510))
-            else:
-                self.image = pygame.transform.scale(self.image, (70,130))
-                screen.blit(self.image, (x, 430))
-            # self.rect = self.image.get_rect()
-            # screen.blit(self.image, (510,x))
+            self.crea_rect(n,x)
+            
+            collision = False
+            for cas in c_lista:
+                if self.rect.colliderect(cas.rect):
+                    collision = True
+                    break
+            if not collision:
+                break
+            
+    def crea_rect(self, n,x):
+        if n == 1:
+            self.image = pygame.transform.scale(self.image, (120,80))
+            self.rect = pygame.Rect(x,470,120,80)
+            self.n = n
+        elif n==2:
+            self.image = pygame.transform.scale(self.image, (70,50))
+            self.rect = pygame.Rect(x,510,70,50)
+            self.n = n
+        else:
+            self.image = pygame.transform.scale(self.image, (70,130))
+            self.rect = pygame.Rect(x,430,70,130)
+            self.n = n
+    
+    def stampa (self,screen):
+        screen.blit(self.image, self.rect.topleft)
+    
+
+
+    
+   
             
 
 #-----------------------------------------------------------------
@@ -220,15 +207,25 @@ image_case[3]= "immagini/casa 3.png"
 
 # rett2 = pygame.Surface((150,100))
 # rett2.fill("Black")
+c_lista = []
+# n_casa = randint(3,4)
+# for i in range(n_casa):
+#     casa = Casa(image_case)
+#     c_lista.append(casa)
 
-n_casa = randint(3,4)
-casa = Casa(n_casa, image_case)
+    # else:
+    #     casa = Casa(image_case)
+    #     while casa.controllo_coll(casa.rect):
+    #     if not self.controllo_coll(rect):
+    #             self.posizione.append((x, n))
+    #             break
+
 aereo = Aereo (1,0,200,200)
 screen = pygame.display.set_mode((1200,600))
 pygame.display.set_caption('Atomic bomb')
 clock = pygame.time.Clock()
 
-sfondox = pygame.image.load('immagini/sfondo2.png').convert()
+sfondox = pygame.image.load('immagini/sfondo2.1.png').convert()
 sfondo = pygame.transform.scale(sfondox, (1200, 750))
 
 prova2 = pygame.image.load('immagini/aeroplano.png')
@@ -246,6 +243,15 @@ b_controllo = False
 
 while True:
     screen.blit(sfondo, (0,0))
+
+    if not c_lista:
+        n_casa = randint(3,4)
+        for i in range(n_casa):
+            casa = Casa(image_case)
+            c_lista.append(casa)
+    for casa in c_lista:
+        casa.stampa(screen)
+
     for event in pygame.event.get():
        if event.type == pygame.QUIT:
            pygame.quit()
@@ -284,10 +290,10 @@ while True:
             bomba.stampa(screen)
             if bomba.controllo():  
                 lista_b.remove(bomba)
-            for rect in casa.case_rect():
-                if bomba.rect.colliderect(rect):
-                    pygame.quit()
-                    exit()
+            for casa in c_lista:
+                    if bomba.rect.colliderect(casa.rect):
+                       c_lista.remove(casa)
+                       lista_b.remove(bomba)
 
 
     
@@ -299,13 +305,19 @@ while True:
     aereo.muoviti(vel_x, vel_y) 
     aereo.ruota(acc_y, vel_x)
     aereo.stampa(screen, acc_y)
-    casa.genera(screen)
-    # for bomba in lista_b:
-    #     if bomba.rect.colliderect(casa.rect) == True:
-    #         pygame.quit()
-    #         exit()
-    # screen.blit(rett, (100,400))
-    # screen.blit(rett1, (500,500))
-    # screen.blit(rett2, (1000,460))
+
+
+
+
+
+
+
+                                                                    # for bomba in lista_b:
+                                                                    #     if bomba.rect.colliderect(casa.rect) == True:
+                                                                    #         pygame.quit()
+                                                                    #         exit()
+                                                                    # screen.blit(rett, (100,400))
+                                                                    # screen.blit(rett1, (500,500))
+                                                                    # screen.blit(rett2, (1000,460))
     pygame.display.update()
     clock.tick(60)
