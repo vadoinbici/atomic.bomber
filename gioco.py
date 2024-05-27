@@ -228,7 +228,7 @@ screen = pygame.display.set_mode((1200,600))
 pygame.display.set_caption('Atomic bomb')
 clock = pygame.time.Clock()
 
-sfondox = pygame.image.load('immagini/sfondo2.png').convert()
+sfondox = pygame.image.load('immagini/sfondo.png').convert()
 sfondo = pygame.transform.scale(sfondox, (1200, 750))
 
 prova2 = pygame.image.load('immagini/aeroplano.png')
