@@ -151,6 +151,7 @@ class Casa:
         self.image_case = image_case
         self.posizione = []
         self.generazione_pos()
+        self.colpita = False
 
     def generazione_pos (self):
         while True:
@@ -184,8 +185,13 @@ class Casa:
     def stampa (self,screen):
         screen.blit(self.image, self.rect.topleft)
     
-
-
+class Esplosione1:
+    def __init__ (self, x, y):
+        self.image = pygame.image.load("immagini/esplosione.png")
+        self.image = pygame.transform.scale(self.image, (80,80))
+        self.rect = pygame.Rect(x,y,80,80)
+    def appare (self,screen):
+        screen.blit(self.image, self.rect.topleft)
     
    
             
@@ -195,30 +201,11 @@ class Casa:
 #-----------------------------------------------------------------            
 
 image_case = {}
-image_case[1]= "immagini/casa 1.png"
-image_case[2]= "immagini/casa 2.png"
-image_case[3]= "immagini/casa 3.png"
+image_case[1]= "immagini/casa11.png"
+image_case[2]= "immagini/casa22.png"
+image_case[3]= "immagini/casa33.png"
 
-# rett = pygame.Surface((90,160))
-# rett.fill("Blue")
-
-# rett1 = pygame.Surface((90,60))
-# rett1.fill("Red")
-
-# rett2 = pygame.Surface((150,100))
-# rett2.fill("Black")
 c_lista = []
-# n_casa = randint(3,4)
-# for i in range(n_casa):
-#     casa = Casa(image_case)
-#     c_lista.append(casa)
-
-    # else:
-    #     casa = Casa(image_case)
-    #     while casa.controllo_coll(casa.rect):
-    #     if not self.controllo_coll(rect):
-    #             self.posizione.append((x, n))
-    #             break
 
 aereo = Aereo (1,0,200,200)
 screen = pygame.display.set_mode((1200,600))
@@ -232,7 +219,11 @@ prova2 = pygame.image.load('immagini/aeroplano.png')
 prova = pygame.transform.scale(prova2, (100, 50))
 prova1 = prova.get_rect()
 
+temp = 0
+e_lista_temp = []
+e_lista = []
 lista_b = []
+
 b_vel_y = 1
 b_vel_x = 1
 vel_x = 2
@@ -240,7 +231,7 @@ vel_y = 0
 acc_x = 0
 acc_y = 0
 b_controllo = False
-
+e_lista_counter = {}
 while True:
     screen.blit(sfondo, (0,0))
 
@@ -290,15 +281,44 @@ while True:
             bomba.stampa(screen)
             if bomba.controllo():  
                 lista_b.remove(bomba)
-            for casa in c_lista:
-                    if bomba.rect.colliderect(casa.rect):
-                       c_lista.remove(casa)
-                       lista_b.remove(bomba)
-            if bomba.rect.y >= 5:
+            
+            for casa_esp in e_lista_temp:  # Controlla solo le case che sono in attesa di essere rimosse
+                casa = casa_esp['casa']
+                if bomba.rect.colliderect(casa.rect):
+                    lista_b.remove(bomba)
+                    break
+            
+            else:
+            
+                for casa in c_lista:
+                        if bomba.rect.colliderect(casa.rect):
+                            casa.colpita = True
+                            esplosione = Esplosione1((bomba.rect.x - 50), bomba.rect.y)
+                            casa_esp_temp = {'casa': casa, 'esplosione': esplosione}
+                            e_lista_temp.append(casa_esp_temp)
+                            e_lista_counter[esplosione] = 0
+                            lista_b.remove(bomba)
+                            break
+
+
+            if bomba.rect.y >= 510:
                 lista_b.remove(bomba)
 
-
     
+    if e_lista_temp:
+        for casa_esp in e_lista_temp:
+            esplosione = casa_esp['esplosione']
+            casa = casa_esp['casa'] 
+            esplosione.appare(screen)
+            e_lista_counter[esplosione] += 1
+
+            if e_lista_counter[esplosione] > 20:
+                c_lista.remove(casa)
+                e_lista_temp.remove(casa_esp)
+
+
+
+
     vel_x = aereo.velx(vel_x, acc_x)
     vel_y = aereo.vely(vel_y, acc_y)
     acc_y = aereo.accy(vel_y, acc_y)
