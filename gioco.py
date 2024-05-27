@@ -209,8 +209,8 @@ class Casa:
 
 image_case = {}
 image_case[1]= "immagini/casa11.png"
-image_case[2]= "immagini/casa 2.png"
-image_case[3]= "immagini/casa 3.png"
+image_case[2]= "immagini/casa22.png"
+image_case[3]= "immagini/casa33.png"
 
 # rett = pygame.Surface((90,160))
 # rett.fill("Blue")
