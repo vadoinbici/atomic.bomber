@@ -178,7 +178,13 @@ class Casa:
             if esiste_rect.colliderect(nuovo_rect):
                 return True
         return False
-            
+    
+    def case_rect (self):
+        rect = []
+        for pos in self.posizione:
+            x, n = pos
+            rect.append(self.crea_rect(x, n))
+        return rect            
 
     def genera(self,screen):
         for pos in self.posizione:
@@ -215,7 +221,7 @@ image_case[3]= "immagini/casa 3.png"
 # rett2 = pygame.Surface((150,100))
 # rett2.fill("Black")
 
-n_casa = randint(2,4)
+n_casa = randint(3,4)
 casa = Casa(n_casa, image_case)
 aereo = Aereo (1,0,200,200)
 screen = pygame.display.set_mode((1200,600))
@@ -276,8 +282,12 @@ while True:
             b_vel_y = bomba.bomba_y(b_vel_y)
             bomba.bomb_move(bomba.b_vel_x, b_vel_y)
             bomba.stampa(screen)
-            if bomba.controllo() == True:  
+            if bomba.controllo():  
                 lista_b.remove(bomba)
+            for rect in casa.case_rect():
+                if bomba.rect.colliderect(rect):
+                    pygame.quit()
+                    exit()
 
 
     
@@ -290,6 +300,10 @@ while True:
     aereo.ruota(acc_y, vel_x)
     aereo.stampa(screen, acc_y)
     casa.genera(screen)
+    # for bomba in lista_b:
+    #     if bomba.rect.colliderect(casa.rect) == True:
+    #         pygame.quit()
+    #         exit()
     # screen.blit(rett, (100,400))
     # screen.blit(rett1, (500,500))
     # screen.blit(rett2, (1000,460))
