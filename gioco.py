@@ -227,6 +227,29 @@ class Esplosione1:
         self.rect = pygame.Rect(x,y,80,80)
     def appare (self,screen):
         screen.blit(self.image, self.rect.topleft)
+
+class Missile:
+    def __init__ (self, pos_x, pos_y):
+        self.image = pygame.image.load('immagini/missile2.png')
+        self.image = pygame.transform.scale(self.image, (50,25))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (pos_x, pos_y)
+
+
+    def movimento(self, ostacoli_lista):
+        ostacoli_rect_lista = []
+
+        if ostacoli_lista:
+            for ostacoli_rect in ostacoli_lista:
+                ostacoli_rect.x -= 5
+                screen.blit(self.image, ostacoli_rect)
+                if ostacoli_rect.x > -50:
+                    ostacoli_rect_lista.append(ostacoli_rect)
+        return ostacoli_rect_lista
+
+        
+
+
     
    
             
@@ -241,6 +264,7 @@ image_case[2]= "immagini/casa22.png"
 image_case[3]= "immagini/casa33.png"
 
 c_lista = []
+ostacoli_rect_lista = []
 
 aereo = Aereo (1,0,200,200)
 # screen = pygame.display.set_mode((1200,600))
@@ -267,6 +291,9 @@ acc_x = 0
 acc_y = 0
 b_controllo = False
 e_lista_counter = {}
+
+ostacoli_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(ostacoli_timer, 2000)
 while True:
     screen.blit(sfondo, (0,0))
 
@@ -306,8 +333,10 @@ while True:
                 if len(lista_b) < 3:
                     lista_b.append(bomba)
                     b_controllo = True
+       if event.type == ostacoli_timer:
+            ostacoli_rect_lista.append(pygame.Rect(randint(1300, 1500), randint(100,300), 50, 25))
 
-
+    
 
     if b_controllo == True:
         for bomba in lista_b:
@@ -351,9 +380,10 @@ while True:
                 c_lista.remove(casa)
                 e_lista_temp.remove(casa_esp)
 
+    missile = Missile(1300, 100)
+    ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
 
-
-
+    
     vel_x = aereo.velx(vel_x, acc_x)
     vel_y = aereo.vely(vel_y, acc_y)
     acc_y = aereo.accy(vel_y, acc_y)
