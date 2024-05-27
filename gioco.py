@@ -31,12 +31,12 @@ class Aereo:
         self.rect.y += self.vel_y
 
     def velx (self, vel_x, acc_x):
-        if vel_x >= 4:
+        if vel_x >= 3:
             if acc_x < 0:
                 vel_x += acc_x
                 vel_x = round(vel_x, 1)
                 return (vel_x)
-        elif vel_x <= -4:
+        elif vel_x <= -3:
             if acc_x > 0:
                 vel_x += acc_x
                 vel_x = round(vel_x, 1)
@@ -143,7 +143,7 @@ class Bomba:
             return True
         if self.rect.y > 650:
             return True
-        return False
+        return False 
 
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
@@ -210,6 +210,7 @@ while True:
             bomba.stampa(screen)
             if bomba.controllo() == True:  
                 lista_b.remove(bomba)
+
 
     
     vel_x = aereo.velx(vel_x, acc_x)
