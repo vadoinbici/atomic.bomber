@@ -57,8 +57,8 @@ class Aereo:
         self.vel_y = vel_y
         self.flipped = False
     
-    def cordinate(self):
-        return self.rect.topleft
+    # def cordinate(self):
+    #     return self.rect.topleft
     
     def muoviti (self, vel_x, vel_y):
         self.vel_x = vel_x
@@ -148,6 +148,17 @@ class Aereo:
             return (-vel_y)
         else:
             return (vel_y)
+        
+    def missile_collisione(self, ostacoli):
+        for ostacolo in ostacoli:
+            if self.rect.colliderect(ostacolo.rect):
+                return ostacolo
+        return None
+    
+    def terreno_collisione(self):
+        if self.rect.y >= 560:
+            return True
+        return False
 
 class Bomba:
     def __init__(self, vel_x, vel_y, pos_x, pos_y):
@@ -225,6 +236,7 @@ class Esplosione1:
         self.image = pygame.image.load("immagini/esplosione.png")
         self.image = pygame.transform.scale(self.image, (80,80))
         self.rect = pygame.Rect(x,y,80,80)
+
     def appare (self,screen):
         screen.blit(self.image, self.rect.topleft)
 
@@ -247,13 +259,7 @@ class Missile:
                     ostacoli_rect_lista.append(ostacoli_rect)
         return ostacoli_rect_lista
 
-        
-
-
     
-   
-            
-
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
 #-----------------------------------------------------------------            
@@ -274,9 +280,9 @@ clock = pygame.time.Clock()
 sfondox = pygame.image.load('immagini/sfondo2.1.png').convert()
 sfondo = pygame.transform.scale(sfondox, (1200, 750))
 
-prova2 = pygame.image.load('immagini/aeroplano.png')
-prova = pygame.transform.scale(prova2, (100, 50))
-prova1 = prova.get_rect()
+# prova2 = pygame.image.load('immagini/aeroplano.png')
+# prova = pygame.transform.scale(prova2, (100, 50))
+# prova1 = prova.get_rect()
 
 temp = 0
 e_lista_temp = []
@@ -294,7 +300,10 @@ e_lista_counter = {}
 
 ostacoli_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(ostacoli_timer, 2000)
+game_over = False
 while True:
+    if game_over:
+        break
     screen.blit(sfondo, (0,0))
 
     if not c_lista:
@@ -338,7 +347,7 @@ while True:
 
     
 
-    if b_controllo == True:
+    if b_controllo:
         for bomba in lista_b:
             b_vel_y = bomba.bomba_y(b_vel_y)
             bomba.bomb_move(bomba.b_vel_x, b_vel_y)
@@ -353,7 +362,6 @@ while True:
                     break
             
             else:
-            
                 for casa in c_lista:
                         if bomba.rect.colliderect(casa.rect):
                             casa.colpita = True
@@ -383,7 +391,16 @@ while True:
     missile = Missile(1300, 100)
     ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
 
-    
+    oggetto_colpito = aereo.missile_collisione(c_lista + [missile])
+    if oggetto_colpito:
+        esplosione = Esplosione1(aereo.rect.x, aereo.rect.y)
+        e_lista_temp.append({'casa': oggetto_colpito, 'esplosione': oggetto_colpito})
+        game_over = True
+    if aereo.terreno_collisione():
+        esplosione = Esplosione1(aereo.rect.x, aereo.rect.y)
+        e_lista_temp.append({'casa': None, 'esplosione': esplosione})
+        game_over = True
+
     vel_x = aereo.velx(vel_x, acc_x)
     vel_y = aereo.vely(vel_y, acc_y)
     acc_y = aereo.accy(vel_y, acc_y)
@@ -392,12 +409,6 @@ while True:
     aereo.muoviti(vel_x, vel_y) 
     aereo.ruota(acc_y, vel_x)
     aereo.stampa(screen, acc_y)
-
-
-
-
-
-
 
                                                                     # for bomba in lista_b:
                                                                     #     if bomba.rect.colliderect(casa.rect) == True:
