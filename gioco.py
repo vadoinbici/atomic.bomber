@@ -294,7 +294,7 @@ while True:
                     if bomba.rect.colliderect(casa.rect):
                        c_lista.remove(casa)
                        lista_b.remove(bomba)
-            if bomba.rect.y >= 510:
+            if bomba.rect.y >= 5:
                 lista_b.remove(bomba)
 
 
