@@ -9,7 +9,8 @@ pygame.display.set_caption('Atomic bomber')
 
 sfondo1 = pygame.image.load('immagini/caricamento.png')
 sfondo1 = pygame.transform.scale(sfondo1, (1200,600))
-
+sfondo_over = pygame.image.load('immagini/game_over.png')
+sfondo_over = pygame.transform.scale(sfondo_over, (1200,600))
 barra_caricamento_colore = ('Orange')
 
 def genera_barra(screen, progresso):
@@ -104,53 +105,81 @@ e_lista_counter = {}
 ostacoli_timer = pygame.USEREVENT + 1
 
 livello = 1
-
+game_over = False
 while True:
-    screen.blit(sfondo, (0,0))
-    if livello <= 3:
-        if not c_lista:
-            pygame.time.set_timer(ostacoli_timer, 3000)
-            n_casa = 3
-            bmax = 12
-            bombe_rimanenti = bmax
-            for i in range(n_casa):
-                casa = Casa(image_case, c_lista)
-                c_lista.append(casa)
-        for casa in c_lista:
-            casa.stampa(screen)
-    if 4 <= livello <= 7:
-        if not c_lista:
-            pygame.time.set_timer(ostacoli_timer, 2000)
-            n_casa = 4
-            bmax = 10
-            bombe_rimanenti = bmax
-            for i in range(n_casa):
-                casa = Casa(image_case,c_lista)
-                c_lista.append(casa)
-        for casa in c_lista:
-            casa.stampa(screen)
-    if 8 <= livello <= 10:
-        if not c_lista:
-            pygame.time.set_timer(ostacoli_timer, 1500)
-            n_casa = 4
-            bmax = 8
-            bombe_rimanenti = bmax
-            for i in range(n_casa):
-                casa = Casa(image_case,c_lista)
-                c_lista.append(casa)
-        for casa in c_lista:
-            casa.stampa(screen)
-    if livello > 10:
-        if not c_lista:
-            pygame.time.set_timer(ostacoli_timer, 1000)
-            n_casa = 5
-            bmax = 5
-            bombe_rimanenti = bmax
-            for i in range(n_casa):
-                casa = Casa(image_case.c_lista)
-                c_lista.append(casa)
-        for casa in c_lista:
-            casa.stampa(screen)
+    if game_over:
+        screen.blit(sfondo_over, (0,0))
+        mostra_testo(screen, "Prendi INVIO per ricominciare", 300, 500)
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                game_over = False
+                livello = 1
+                a_lista = []
+                aereo = Aereo (1,0,200,200)
+                a_lista.append(aereo)
+                e_lista_temp = []
+                e_lista = []
+                lista_b = []
+                e1_lista = {}
+                vel_x = 2
+                vel_y = 0
+                acc_x = 0
+                acc_y = 0
+                b = 0
+                m_lista = []
+                e_lista_counter = {}
+
+
+    else:
+        screen.blit(sfondo, (0,0))
+        if livello <= 3:
+            if not c_lista:
+                pygame.time.set_timer(ostacoli_timer, 3000)
+                n_casa = 3
+                bmax = 12
+                bombe_rimanenti = bmax
+                for i in range(n_casa):
+                    casa = Casa(image_case, c_lista)
+                    c_lista.append(casa)
+            for casa in c_lista:
+                casa.stampa(screen)
+        if 4 <= livello <= 7:
+            if not c_lista:
+                pygame.time.set_timer(ostacoli_timer, 2000)
+                n_casa = 4
+                bmax = 10
+                bombe_rimanenti = bmax
+                for i in range(n_casa):
+                    casa = Casa(image_case,c_lista)
+                    c_lista.append(casa)
+            for casa in c_lista:
+                casa.stampa(screen)
+        if 8 <= livello <= 10:
+            if not c_lista:
+                pygame.time.set_timer(ostacoli_timer, 1500)
+                n_casa = 4
+                bmax = 8
+                bombe_rimanenti = bmax
+                for i in range(n_casa):
+                    casa = Casa(image_case,c_lista)
+                    c_lista.append(casa)
+            for casa in c_lista:
+                casa.stampa(screen)
+        if livello > 10:
+            if not c_lista:
+                pygame.time.set_timer(ostacoli_timer, 1000)
+                n_casa = 5
+                bmax = 5
+                bombe_rimanenti = bmax
+                for i in range(n_casa):
+                    casa = Casa(image_case.c_lista)
+                    c_lista.append(casa)
+            for casa in c_lista:
+                casa.stampa(screen)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -261,13 +290,15 @@ while True:
             esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
             e1_lista[esp1] = 0
             a_lista.remove(aereo)
-             # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
+            game_over= True
+            
         for casa in c_lista:
             if aereo.rect.colliderect(casa.rect):
                 esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
                 e1_lista[esp1] = 0
                 a_lista.remove(aereo)
-                # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
+                game_over = True
+                
 
 
     mostra_testo(screen, f"Livello: {livello}", 10, 10)
@@ -281,11 +312,14 @@ while True:
             e1_lista[esp1] = 0
             m_lista.remove(missile)
             a_lista.remove(aereo)
-             # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
+            game_over = True
+            
 
     if not c_lista:
         livello += 1
         b = 0
+    if bombe_rimanenti==0 and not lista_b:
+        game_over= True
 
     pygame.display.update()
     clock.tick(60)
