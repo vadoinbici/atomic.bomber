@@ -309,12 +309,9 @@ e_lista_counter = {}
 
 ostacoli_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(ostacoli_timer, 2000)
-# game_over = False
-while True:
-    # if game_over:
-    #     break
-    # screen.blit(sfondo, (0,0))
 
+while True:
+    screen.blit(sfondo, (0,0))
     if not c_lista:
         n_casa = randint(3,4)
         for i in range(n_casa):
@@ -383,7 +380,7 @@ while True:
 
 
             if bomba.rect.y >= 510:
-                esp1 = Esplosione2((bomba.rect.x -50), bomba.rect.y)
+                esp1 = Esplosione2((bomba.rect.x), bomba.rect.y)
                 e1_lista[esp1] = 0
                 lista_b.remove(bomba)
     
@@ -410,15 +407,7 @@ while True:
     missile = Missile(1300, 100)
     ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
 
-    # oggetto_colpito = aereo.missile_collisione(c_lista + [missile])
-    # if oggetto_colpito:
-    #     esplosione = Esplosione1(aereo.rect.x, aereo.rect.y)
-    #     e_lista_temp.append({'casa': oggetto_colpito, 'esplosione': oggetto_colpito})
-    #     game_over = True
-    # if aereo.terreno_collisione():
-    #     esplosione = Esplosione1(aereo.rect.x, aereo.rect.y)
-    #     e_lista_temp.append({'casa': None, 'esplosione': esplosione})
-    #     game_over = True
+    
 
     vel_x = aereo.velx(vel_x, acc_x)
     vel_y = aereo.vely(vel_y, acc_y)
