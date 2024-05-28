@@ -263,6 +263,19 @@ while True:
         aereo.muoviti(vel_x, vel_y) 
         aereo.ruota(acc_y, vel_x)
         aereo.stampa(screen, acc_y)
+        if aereo.rect.y >= 490:
+            esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
+            e1_lista[esp1] = 0
+            a_lista.remove(aereo)
+             # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
+        for casa in c_lista:
+            if aereo.rect.colliderect(casa.rect):
+                esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
+                e1_lista[esp1] = 0
+                a_lista.remove(aereo)
+                # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
+
+
     mostra_testo(screen, f"Livello: {livello}", 10, 10)
     mostra_testo(screen, f"Bombe rimanenti: {bombe_rimanenti}", 200, 10)
 
@@ -274,7 +287,7 @@ while True:
             e1_lista[esp1] = 0
             m_lista.remove(missile)
             a_lista.remove(aereo)
-
+             # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
 
 
     
