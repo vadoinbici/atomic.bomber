@@ -268,6 +268,10 @@ class Missile:
                     ostacoli_rect_lista.append(ostacoli_rect)
         return ostacoli_rect_lista
 
+def mostra_testo(screen, testo, x, y):
+    font = pygame.font.SysFont('Eras Demi ITC', 36)
+    testo_surf = font.render(testo, True, 'Black')
+    screen.blit(testo_surf, (x, y))
     
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
@@ -309,24 +313,28 @@ b_controllo = False
 e_lista_counter = {}
 
 ostacoli_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(ostacoli_timer, 2000)
+
 livello = 1
+
 while True:
     screen.blit(sfondo, (0,0))
     if livello <= 3:
         if not c_lista:
-            n_casa = 2
-            bmax = 10
+            pygame.time.set_timer(ostacoli_timer, 3000)
+            n_casa = 3
+            bmax = 12
+            bombe_rimanenti = bmax
             for i in range(n_casa):
                 casa = Casa(image_case)
                 c_lista.append(casa)
         for casa in c_lista:
             casa.stampa(screen)
-    
     if 4 <= livello <= 7:
         if not c_lista:
-            n_casa = 3
-            bmax = 8
+            pygame.time.set_timer(ostacoli_timer, 2000)
+            n_casa = 4
+            bmax = 10
+            bombe_rimanenti = bmax
             for i in range(n_casa):
                 casa = Casa(image_case)
                 c_lista.append(casa)
@@ -334,8 +342,10 @@ while True:
             casa.stampa(screen)
     if 8 <= livello <= 10:
         if not c_lista:
+            pygame.time.set_timer(ostacoli_timer, 1500)
             n_casa = 4
-            bmax = 6
+            bmax = 8
+            bombe_rimanenti = bmax
             for i in range(n_casa):
                 casa = Casa(image_case)
                 c_lista.append(casa)
@@ -343,8 +353,10 @@ while True:
             casa.stampa(screen)
     if livello > 10:
         if not c_lista:
-            n_casa = 4
-            bmax = 4
+            pygame.time.set_timer(ostacoli_timer, 1000)
+            n_casa = 5
+            bmax = 5
+            bombe_rimanenti = bmax
             for i in range(n_casa):
                 casa = Casa(image_case)
                 c_lista.append(casa)
@@ -379,10 +391,11 @@ while True:
                 if len(lista_b) < 3:
                     if b != bmax:
                         b += 1
+                        bombe_rimanenti -= 1 
                         lista_b.append(bomba)
                         b_controllo = True
         if event.type == ostacoli_timer:
-            ostacoli_rect_lista.append(pygame.Rect(randint(1300, 1500), randint(100,300), 50, 25))
+            ostacoli_rect_lista.append(pygame.Rect(randint(1300, 1500), randint(50,430), 50, 25))
 
 
 
@@ -450,7 +463,8 @@ while True:
     aereo.muoviti(vel_x, vel_y) 
     aereo.ruota(acc_y, vel_x)
     aereo.stampa(screen, acc_y)
-
+    mostra_testo(screen, f"Livello: {livello}", 10, 10)
+    mostra_testo(screen, f"Bombe rimanenti: {bombe_rimanenti}", 200, 10)
 
     if not c_lista:
         livello += 1
