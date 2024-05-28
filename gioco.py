@@ -310,6 +310,7 @@ acc_x = 0
 acc_y = 0
 b = 0
 b_controllo = False
+m_lista = []
 e_lista_counter = {}
 
 ostacoli_timer = pygame.USEREVENT + 1
@@ -451,8 +452,14 @@ while True:
 
 
     missile = Missile(1300, 100)
+    m_lista.append(missile)
     ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
-
+    for missile in m_lista:
+        if aereo.rect.colliderect(missile.rect):
+            esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
+            
+            e1_lista[esp1] = 0
+            m_lista.remove(missile)
 
 
     vel_x = aereo.velx(vel_x, acc_x)
@@ -465,6 +472,7 @@ while True:
     aereo.stampa(screen, acc_y)
     mostra_testo(screen, f"Livello: {livello}", 10, 10)
     mostra_testo(screen, f"Bombe rimanenti: {bombe_rimanenti}", 200, 10)
+
 
     if not c_lista:
         livello += 1
