@@ -151,9 +151,10 @@ class Bomba:
         return False 
 
 class Casa:
-    def __init__ (self, image_case):
+    def __init__ (self, image_case, c_lista):
         self.image_case = image_case
         self.posizione = []
+        self.c_lista = c_lista
         self.generazione_pos()
         self.colpita = False
 
@@ -165,7 +166,7 @@ class Casa:
             self.crea_rect(n,x)
             
             collision = False
-            for cas in c_lista:
+            for cas in self.c_lista:
                 if self.rect.colliderect(cas.rect):
                     collision = True
                     break
@@ -221,9 +222,9 @@ class Missile:
 
 
 
-image_case = {}
-image_case[1]= "immagini/casa11.png"
-image_case[2]= "immagini/casa22.png"
-image_case[3]= "immagini/casa33.png"
+# image_case = {}
+# image_case[1]= "immagini/casa11.png"
+# image_case[2]= "immagini/casa22.png"
+# image_case[3]= "immagini/casa33.png"
 
-c_lista = []
+# c_lista = []
