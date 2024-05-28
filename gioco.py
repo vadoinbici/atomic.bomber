@@ -34,8 +34,8 @@ while caricamento:
     genera_barra(screen, progresso)
     pygame.display.flip()
 
-    time.sleep(0.2)  
-    progresso += 0.02
+    time.sleep(0.1)  
+    progresso += 0.05
     if progresso >= 1:
         caricamento = False
 # lista_b = []
@@ -149,16 +149,16 @@ class Aereo:
         else:
             return (vel_y)
         
-    def missile_collisione(self, ostacoli):
-        for ostacolo in ostacoli:
-            if self.rect.colliderect(ostacolo.rect):
-                return ostacolo
-        return None
+    # def missile_collisione(self, ostacoli):
+    #     for ostacolo in ostacoli:
+    #         if self.rect.colliderect(ostacolo.rect):
+    #             return ostacolo
+    #     return None
     
-    def terreno_collisione(self):
-        if self.rect.y >= 560:
-            return True
-        return False
+    # def terreno_collisione(self):
+    #     if self.rect.y >= 560:
+    #         return True
+    #     return False
 
 class Bomba:
     def __init__(self, vel_x, vel_y, pos_x, pos_y):
@@ -239,6 +239,15 @@ class Esplosione1:
 
     def appare (self,screen):
         screen.blit(self.image, self.rect.topleft)
+    
+class Esplosione2:
+    def __init__ (self, x, y):
+        self.image = pygame.image.load("immagini/esplosione.png")
+        self.image = pygame.transform.scale(self.image, (40,40))
+        self.rect = pygame.Rect(x,y,40,40)
+
+    def appare (self,screen):
+        screen.blit(self.image, self.rect.topleft)
 
 class Missile:
     def __init__ (self, pos_x, pos_y):
@@ -288,7 +297,7 @@ temp = 0
 e_lista_temp = []
 e_lista = []
 lista_b = []
-
+e1_lista = {}
 b_vel_y = 1
 b_vel_x = 1
 vel_x = 2
@@ -300,11 +309,11 @@ e_lista_counter = {}
 
 ostacoli_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(ostacoli_timer, 2000)
-game_over = False
+# game_over = False
 while True:
-    if game_over:
-        break
-    screen.blit(sfondo, (0,0))
+    # if game_over:
+    #     break
+    # screen.blit(sfondo, (0,0))
 
     if not c_lista:
         n_casa = randint(3,4)
@@ -374,8 +383,9 @@ while True:
 
 
             if bomba.rect.y >= 510:
+                esp1 = Esplosione2((bomba.rect.x -50), bomba.rect.y)
+                e1_lista[esp1] = 0
                 lista_b.remove(bomba)
-
     
     if e_lista_temp:
         for casa_esp in e_lista_temp:
@@ -387,19 +397,28 @@ while True:
             if e_lista_counter[esplosione] > 20:
                 c_lista.remove(casa)
                 e_lista_temp.remove(casa_esp)
+    
+    if e1_lista:
+        for esp1 in e1_lista:
+            e1_lista[esp1] += 1
+        if e1_lista[esp1] < 15:
+            esp1.appare(screen)
+        else:
+            del e1_lista[esp1]
+
 
     missile = Missile(1300, 100)
     ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
 
-    oggetto_colpito = aereo.missile_collisione(c_lista + [missile])
-    if oggetto_colpito:
-        esplosione = Esplosione1(aereo.rect.x, aereo.rect.y)
-        e_lista_temp.append({'casa': oggetto_colpito, 'esplosione': oggetto_colpito})
-        game_over = True
-    if aereo.terreno_collisione():
-        esplosione = Esplosione1(aereo.rect.x, aereo.rect.y)
-        e_lista_temp.append({'casa': None, 'esplosione': esplosione})
-        game_over = True
+    # oggetto_colpito = aereo.missile_collisione(c_lista + [missile])
+    # if oggetto_colpito:
+    #     esplosione = Esplosione1(aereo.rect.x, aereo.rect.y)
+    #     e_lista_temp.append({'casa': oggetto_colpito, 'esplosione': oggetto_colpito})
+    #     game_over = True
+    # if aereo.terreno_collisione():
+    #     esplosione = Esplosione1(aereo.rect.x, aereo.rect.y)
+    #     e_lista_temp.append({'casa': None, 'esplosione': esplosione})
+    #     game_over = True
 
     vel_x = aereo.velx(vel_x, acc_x)
     vel_y = aereo.vely(vel_y, acc_y)
