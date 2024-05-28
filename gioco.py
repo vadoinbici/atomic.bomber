@@ -2,12 +2,6 @@ import pygame
 from random import randint
 from sys import exit
 import time
-from classi import Aereo
-from classi import Bomba
-from classi import Casa
-from classi import Esplosione1
-from classi import Esplosione2
-from classi import Missile
 pygame.init()
 
 screen = pygame.display.set_mode((1200,600))
@@ -288,12 +282,6 @@ while True:
             m_lista.remove(missile)
             a_lista.remove(aereo)
              # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
-
-
-    
-
-
-
 
     if not c_lista:
         livello += 1

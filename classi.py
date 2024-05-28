@@ -7,7 +7,7 @@ pygame.init()
 class Aereo:
     def __init__(self, vel_x, vel_y, pos_x, pos_y,):
         self.image = pygame.image.load('immagini/aeroplano.png')
-        self.image = pygame.transform.scale(self.image, (100,50))
+        self.image = pygame.transform.scale(self.image, (85,20))
         self.image1 = self.image
         self.rect = self.image.get_rect()      
         self.rect.topleft = (pos_x, pos_y)
