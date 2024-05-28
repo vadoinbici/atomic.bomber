@@ -485,6 +485,13 @@ while True:
             m_lista.remove(missile)
             a_lista.remove(aereo)
 
+
+
+    
+
+
+
+
     if not c_lista:
         livello += 1
         b = 0
