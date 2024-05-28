@@ -304,28 +304,59 @@ vel_x = 2
 vel_y = 0
 acc_x = 0
 acc_y = 0
+b = 0
 b_controllo = False
 e_lista_counter = {}
 
 ostacoli_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(ostacoli_timer, 2000)
-
+livello = 1
 while True:
     screen.blit(sfondo, (0,0))
-    if not c_lista:
-        n_casa = randint(3,4)
-        for i in range(n_casa):
-            casa = Casa(image_case)
-            c_lista.append(casa)
-    for casa in c_lista:
-        casa.stampa(screen)
+    if livello <= 3:
+        if not c_lista:
+            n_casa = 2
+            bmax = 10
+            for i in range(n_casa):
+                casa = Casa(image_case)
+                c_lista.append(casa)
+        for casa in c_lista:
+            casa.stampa(screen)
+    
+    if 4 <= livello <= 7:
+        if not c_lista:
+            n_casa = 3
+            bmax = 8
+            for i in range(n_casa):
+                casa = Casa(image_case)
+                c_lista.append(casa)
+        for casa in c_lista:
+            casa.stampa(screen)
+    if 8 <= livello <= 10:
+        if not c_lista:
+            n_casa = 4
+            bmax = 6
+            for i in range(n_casa):
+                casa = Casa(image_case)
+                c_lista.append(casa)
+        for casa in c_lista:
+            casa.stampa(screen)
+    if livello > 10:
+        if not c_lista:
+            n_casa = 4
+            bmax = 4
+            for i in range(n_casa):
+                casa = Casa(image_case)
+                c_lista.append(casa)
+        for casa in c_lista:
+            casa.stampa(screen)
 
     for event in pygame.event.get():
-       if event.type == pygame.QUIT:
-           pygame.quit()
-           exit()
-       
-       elif event.type == pygame.KEYDOWN:
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
             #    vel_x = -4
                 acc_x = -0.5
@@ -346,12 +377,14 @@ while True:
                 i = 0
                 bomba = Bomba(aereo.vel_x, aereo.vel_y, aereo.rect.x, aereo.rect.y)
                 if len(lista_b) < 3:
-                    lista_b.append(bomba)
-                    b_controllo = True
-       if event.type == ostacoli_timer:
+                    if b != bmax:
+                        b += 1
+                        lista_b.append(bomba)
+                        b_controllo = True
+        if event.type == ostacoli_timer:
             ostacoli_rect_lista.append(pygame.Rect(randint(1300, 1500), randint(100,300), 50, 25))
 
-    
+
 
     if b_controllo:
         for bomba in lista_b:
@@ -383,7 +416,7 @@ while True:
                 esp1 = Esplosione2((bomba.rect.x), bomba.rect.y)
                 e1_lista[esp1] = 0
                 lista_b.remove(bomba)
-    
+
     if e_lista_temp:
         for casa_esp in e_lista_temp:
             esplosione = casa_esp['esplosione']
@@ -394,7 +427,7 @@ while True:
             if e_lista_counter[esplosione] > 20:
                 c_lista.remove(casa)
                 e_lista_temp.remove(casa_esp)
-    
+
     if e1_lista:
         for esp1 in e1_lista:
             e1_lista[esp1] += 1
@@ -407,7 +440,7 @@ while True:
     missile = Missile(1300, 100)
     ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
 
-    
+
 
     vel_x = aereo.velx(vel_x, acc_x)
     vel_y = aereo.vely(vel_y, acc_y)
@@ -418,12 +451,10 @@ while True:
     aereo.ruota(acc_y, vel_x)
     aereo.stampa(screen, acc_y)
 
-                                                                    # for bomba in lista_b:
-                                                                    #     if bomba.rect.colliderect(casa.rect) == True:
-                                                                    #         pygame.quit()
-                                                                    #         exit()
-                                                                    # screen.blit(rett, (100,400))
-                                                                    # screen.blit(rett1, (500,500))
-                                                                    # screen.blit(rett2, (1000,460))
+
+    if not c_lista:
+        livello += 1
+        b = 0
+
     pygame.display.update()
     clock.tick(60)
