@@ -2,6 +2,12 @@ import pygame
 from random import randint
 from sys import exit
 import time
+from classi import Aereo
+from classi import Bomba
+from classi import Casa
+from classi import Esplosione1
+from classi import Esplosione2
+from classi import Missile
 pygame.init()
 
 screen = pygame.display.set_mode((1200,600))
@@ -46,111 +52,7 @@ while caricamento:
 # acc_x = 0.5
 # acc_y = 0.2
 
-class Aereo:
-    def __init__(self, vel_x, vel_y, pos_x, pos_y,):
-        self.image = pygame.image.load('immagini/aeroplano.png')
-        self.image = pygame.transform.scale(self.image, (100,50))
-        self.image1 = self.image
-        self.rect = self.image.get_rect()      
-        self.rect.topleft = (pos_x, pos_y)
-        self.vel_x = vel_x
-        self.vel_y = vel_y
-        self.flipped = False
-    
-    # def cordinate(self):
-    #     return self.rect.topleft
-    
-    def muoviti (self, vel_x, vel_y):
-        self.vel_x = vel_x
-        self.vel_y = vel_y
-        self.rect.x += self.vel_x
-        self.rect.y += self.vel_y
 
-    def velx (self, vel_x, acc_x):
-        if vel_x >= 3:
-            if acc_x < 0:
-                vel_x += acc_x
-                vel_x = round(vel_x, 1)
-                return (vel_x)
-        elif vel_x <= -3:
-            if acc_x > 0:
-                vel_x += acc_x
-                vel_x = round(vel_x, 1)
-                return (vel_x)
-        else:
-            vel_x += acc_x
-            return (vel_x)
-        return (vel_x)
-
-    def vely (self, vel_y, acc_y):
-
-        if vel_y >= 2:
-            if acc_y < 0:
-                vel_y += acc_y
-                # print (acc_y)
-                return (vel_y)
-        elif vel_y <= -2:
-            if acc_y > 0:
-                vel_y += acc_y
-                vel_y = round(vel_y, 1)
-                # print (acc_y)
-                return (vel_y)
-        else:
-            vel_y += acc_y
-            vel_y = round(vel_y, 1)
-            # print (acc_y)
-            return (vel_y)
-        vel_y = round(vel_y, 1)
-        # print (acc_y)
-        return (vel_y)
-    
-    def accy (self, vel_y, acc_y):
-        if vel_y == 0:
-            acc_y = 0
-            return (acc_y)
-        return (acc_y)
-    
-    def ruota (self, acc_y, vel_x):
-        if vel_x > 0:
-            if acc_y == 0.2:
-                self.image1 = pygame.transform.rotate(self.image, -20)
-            elif acc_y == -0.2:
-                self.image1 = pygame.transform.rotate(self.image, 20)
-            else:
-                self.image1 = self.image
-        else:
-            if acc_y == 0:
-                self.flipped = pygame.transform.flip(self.image, True, False)
-                self.image1 = self.flipped
-            else:
-                self.flipped = pygame.transform.flip(self.image, True, False)
-
-                if acc_y == 0.2:
-                    self.image1 = pygame.transform.rotate(self.flipped, 20)
-                elif acc_y == -0.2:
-                    self.image1 = pygame.transform.rotate(self.flipped, -20)
-                    
-                else:
-                    self.image1 = self.image
-
-    def stampa (self, screen, acc_y):
-        screen.blit(self.image1, self.rect.topleft)
-
-    def controllox (self):
-        if self.rect.x > 1200:
-            self.rect.x = -50
-        
-        if self.rect.x < -50:
-            self.rect.x = 1200
-
-    def controlloy (self, vel_y):
-        if self.rect.y < -20:
-            return (-vel_y)
-        else:
-            return (vel_y)
-        
-    # def missile_collisione(self, ostacoli):
-    #     for ostacolo in ostacoli:
     #         if self.rect.colliderect(ostacolo.rect):
     #             return ostacolo
     #     return None
