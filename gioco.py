@@ -3,7 +3,7 @@ from random import randint
 from sys import exit
 import time
 pygame.init()
-<<<<<<< HEAD
+
 
 
 from classi import Aereo
@@ -15,8 +15,7 @@ from classi import Esplosione1
 from classi import Esplosione2
 
 
-=======
->>>>>>> 1528609164f994dd48508a9e3cfe822c62ba2eb8
+
 
 screen = pygame.display.set_mode((1200,600))
 pygame.display.set_caption('Atomic bomber')
@@ -128,7 +127,7 @@ bombe_lanciate = 0
 livello = 1
 game_over = False
 while True:
-<<<<<<< HEAD
+
     screen.blit(sfondo, (0,0))
     if livello <= 3:
         while o_lista:
@@ -222,7 +221,7 @@ while True:
 
         for casa in og_lista:
             casa.stampa(screen)
-=======
+
     if game_over:
         screen.blit(sfondo_over, (0,0))
         mostra_testo(screen, "Prendi INVIO per ricominciare", 300, 500)
@@ -296,7 +295,7 @@ while True:
                     c_lista.append(casa)
             for casa in c_lista:
                 casa.stampa(screen)
->>>>>>> 1528609164f994dd48508a9e3cfe822c62ba2eb8
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -427,7 +426,7 @@ while True:
             esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
             e1_lista[esp1] = 0
             a_lista.remove(aereo)
-<<<<<<< HEAD
+
 
             perc = round(case_distrutte/bombe_lanciate, 2)
             classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
@@ -456,16 +455,16 @@ while True:
             m_lista = libera_gioco(m_lista)
             lista_b = libera_gioco(lista_b)
         # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
-=======
+
             game_over= True
             
->>>>>>> 1528609164f994dd48508a9e3cfe822c62ba2eb8
+
         for casa in c_lista:
             if aereo.rect.colliderect(casa.rect):
                 esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
                 e1_lista[esp1] = 0
                 a_lista.remove(aereo)
-<<<<<<< HEAD
+
             
             perc = round(case_distrutte/bombe_lanciate, 2)
             classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
@@ -477,10 +476,10 @@ while True:
                 m_lista = libera_gioco(m_lista)
                 lista_b = libera_gioco(lista_b)
                 # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
-=======
+
                 game_over = True
                 
->>>>>>> 1528609164f994dd48508a9e3cfe822c62ba2eb8
+
 
 
     mostra_testo(screen, f"Livello: {livello}", 10, 10)
@@ -494,13 +493,12 @@ while True:
             e1_lista[esp1] = 0
             m_lista.remove(missile)
             a_lista.remove(aereo)
-<<<<<<< HEAD
+
              # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
 
-=======
+
             game_over = True
-            
->>>>>>> 1528609164f994dd48508a9e3cfe822c62ba2eb8
+
 
     if not c_lista:
         case_distrutte += n_casa
