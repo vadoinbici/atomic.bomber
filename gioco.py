@@ -257,16 +257,19 @@ class Missile:
         self.rect.topleft = (pos_x, pos_y)
 
 
-    def movimento(self, ostacoli_lista):
-        ostacoli_rect_lista = []
+    def movimento(self, screen):
+        self.rect.x -= 5
+        screen.blit(self.image, self.rect.topleft)
 
-        if ostacoli_lista:
-            for ostacoli_rect in ostacoli_lista:
-                ostacoli_rect.x -= 5
-                screen.blit(self.image, ostacoli_rect)
-                if ostacoli_rect.x > -50:
-                    ostacoli_rect_lista.append(ostacoli_rect)
-        return ostacoli_rect_lista
+        # ostacoli_rect_lista = []
+
+        # if ostacoli_lista:
+        #     for ostacoli_rect in ostacoli_lista:
+        #         ostacoli_rect.x -= 5
+        #         screen.blit(self.image, ostacoli_rect)
+        #         if ostacoli_rect.x > -50:
+        #             ostacoli_rect_lista.append(ostacoli_rect)
+        # return ostacoli_rect_lista
 
 def mostra_testo(screen, testo, x, y):
     font = pygame.font.SysFont('Eras Demi ITC', 36)
@@ -284,8 +287,9 @@ image_case[3]= "immagini/casa33.png"
 
 c_lista = []
 ostacoli_rect_lista = []
-
+a_lista = []
 aereo = Aereo (1,0,200,200)
+a_lista.append(aereo)
 # screen = pygame.display.set_mode((1200,600))
 # pygame.display.set_caption('Atomic bomb')
 clock = pygame.time.Clock()
@@ -396,7 +400,11 @@ while True:
                         lista_b.append(bomba)
                         b_controllo = True
         if event.type == ostacoli_timer:
-            ostacoli_rect_lista.append(pygame.Rect(randint(1300, 1500), randint(50,430), 50, 25))
+            y = randint(50,430)
+            x = randint(1300,1500)
+            missile = Missile(x, y)
+            m_lista.append(missile)
+            # ostacoli_rect_lista.append(pygame.Rect(randint(1300, 1500), randint(50,430), 50, 25))
 
 
 
@@ -451,28 +459,31 @@ while True:
             del e1_lista[esp1]
 
 
-    missile = Missile(1300, 100)
-    m_lista.append(missile)
-    ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
-    for missile in m_lista:
-        if aereo.rect.colliderect(missile.rect):
-            esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
-            
-            e1_lista[esp1] = 0
-            m_lista.remove(missile)
+    # missile = Missile(1300, 100)
+    # m_lista.append(missile)
+    # ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
+ 
 
-
-    vel_x = aereo.velx(vel_x, acc_x)
-    vel_y = aereo.vely(vel_y, acc_y)
-    acc_y = aereo.accy(vel_y, acc_y)
-    aereo.controllox()
-    vel_y = aereo.controlloy(vel_y)
-    aereo.muoviti(vel_x, vel_y) 
-    aereo.ruota(acc_y, vel_x)
-    aereo.stampa(screen, acc_y)
+    for aereo in a_lista:
+        vel_x = aereo.velx(vel_x, acc_x)
+        vel_y = aereo.vely(vel_y, acc_y)
+        acc_y = aereo.accy(vel_y, acc_y)
+        aereo.controllox()
+        vel_y = aereo.controlloy(vel_y)
+        aereo.muoviti(vel_x, vel_y) 
+        aereo.ruota(acc_y, vel_x)
+        aereo.stampa(screen, acc_y)
     mostra_testo(screen, f"Livello: {livello}", 10, 10)
     mostra_testo(screen, f"Bombe rimanenti: {bombe_rimanenti}", 200, 10)
 
+    for missile in m_lista:
+        missile.movimento(screen)
+        if aereo.rect.colliderect(missile.rect):
+            esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
+
+            e1_lista[esp1] = 0
+            m_lista.remove(missile)
+            a_lista.remove(aereo)
 
     if not c_lista:
         livello += 1
