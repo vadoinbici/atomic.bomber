@@ -2,13 +2,18 @@ import pygame
 from random import randint
 from sys import exit
 import time
+pygame.init()
+
+
 from classi import Aereo
+from classi import Ospedale
 from classi import Bomba
 from classi import Casa
+from classi import Missile
 from classi import Esplosione1
 from classi import Esplosione2
-from classi import Missile
-pygame.init()
+
+
 
 screen = pygame.display.set_mode((1200,600))
 pygame.display.set_caption('Atomic bomber')
@@ -53,13 +58,11 @@ while caricamento:
 # acc_y = 0.2
 
 
-from classi import Aereo
-from classi import Bomba
-from classi import Casa
-from classi import Missile
-from classi import Esplosione1
-from classi import Esplosione2
-
+def libera_gioco(self, r_lista):
+    while r_lista:
+        for el in r_lista:
+            r_lista.remove(el)
+    return (r_lista)
 
 def mostra_testo(screen, testo, x, y):
     font = pygame.font.SysFont('Eras Demi ITC', 36)
@@ -75,11 +78,15 @@ image_case[1]= "immagini/casa11.png"
 image_case[2]= "immagini/casa22.png"
 image_case[3]= "immagini/casa33.png"
 
+image_osp = {}
+image_osp[1]= "immagini/ospedale1.png"
+image_osp[2]= "immagini/ospedale2.png"
 c_lista = []
 ostacoli_rect_lista = []
 a_lista = []
 aereo = Aereo (1,0,200,200)
 a_lista.append(aereo)
+
 # screen = pygame.display.set_mode((1200,600))
 # pygame.display.set_caption('Atomic bomb')
 clock = pygame.time.Clock()
@@ -94,6 +101,8 @@ sfondo = pygame.transform.scale(sfondox, (1200, 750))
 temp = 0
 e_lista_temp = []
 e_lista = []
+og_lista = []
+o_lista = []
 lista_b = []
 e1_lista = {}
 b_vel_y = 1
@@ -106,56 +115,107 @@ b = 0
 b_controllo = False
 m_lista = []
 e_lista_counter = {}
-
+o_lista_temp = []
+o_lista_counter = {}
+classifica = {}
 ostacoli_timer = pygame.USEREVENT + 1
-
+case_distrutte = 0
+bombe_lanciate = 0
 livello = 1
 
 while True:
     screen.blit(sfondo, (0,0))
     if livello <= 3:
+        while o_lista:
+            for el in o_lista:
+                o_lista.remove(el)
         if not c_lista:
             pygame.time.set_timer(ostacoli_timer, 3000)
             n_casa = 3
+            n_osp = 0
             bmax = 12
             bombe_rimanenti = bmax
+
             for i in range(n_casa):
-                casa = Casa(image_case, c_lista)
+                casa = Casa(image_case, og_lista)
                 c_lista.append(casa)
-        for casa in c_lista:
+                og_lista.append(casa)
+            for i in range(n_osp):
+                ospedale = Ospedale(image_osp, og_lista)
+                o_lista.append(ospedale)
+                og_lista.append(ospedale)
+        for casa in og_lista:
             casa.stampa(screen)
+
+
     if 4 <= livello <= 7:
+        while o_lista:
+            for el in o_lista:
+                o_lista.remove(el)
         if not c_lista:
             pygame.time.set_timer(ostacoli_timer, 2000)
             n_casa = 4
+            n_osp = 1
             bmax = 10
             bombe_rimanenti = bmax
+
             for i in range(n_casa):
-                casa = Casa(image_case,c_lista)
+                casa = Casa(image_case,og_lista)
                 c_lista.append(casa)
-        for casa in c_lista:
+                og_lista.append(casa)
+            for i in range(n_osp):
+                ospedale = Ospedale(image_osp, og_lista)
+                o_lista.append(ospedale)
+                og_lista.append(ospedale)
+        for casa in og_lista:
             casa.stampa(screen)
+
+
     if 8 <= livello <= 10:
+        while o_lista:
+            for el in o_lista:
+                o_lista.remove(el)
         if not c_lista:
             pygame.time.set_timer(ostacoli_timer, 1500)
             n_casa = 4
             bmax = 8
+            n_osp = 2
             bombe_rimanenti = bmax
+            
             for i in range(n_casa):
-                casa = Casa(image_case,c_lista)
+                casa = Casa(image_case,og_lista)
                 c_lista.append(casa)
-        for casa in c_lista:
+                og_lista.append(casa)
+            for i in range(n_osp):
+                ospedale = Ospedale(image_osp, og_lista)
+                o_lista.append(ospedale)
+                og_lista.append(ospedale)
+            
+        for casa in og_lista:
             casa.stampa(screen)
+
+
     if livello > 10:
+        while o_lista:
+            for el in o_lista:
+                o_lista.remove(el)
         if not c_lista:
             pygame.time.set_timer(ostacoli_timer, 1000)
             n_casa = 5
+            n_osp = 3
             bmax = 5
             bombe_rimanenti = bmax
+
             for i in range(n_casa):
-                casa = Casa(image_case.c_lista)
+                casa = Casa(image_case, og_lista)
                 c_lista.append(casa)
-        for casa in c_lista:
+                og_lista.append(casa)
+            for i in range(n_osp):
+                ospedale = Ospedale(image_osp, og_lista)
+                o_lista.append(ospedale)
+                og_lista.append(ospedale)
+
+        for casa in og_lista:
             casa.stampa(screen)
 
     for event in pygame.event.get():
@@ -194,6 +254,7 @@ while True:
             x = randint(1300,1500)
             missile = Missile(x, y)
             m_lista.append(missile)
+            
             # ostacoli_rect_lista.append(pygame.Rect(randint(1300, 1500), randint(50,430), 50, 25))
 
 
@@ -222,6 +283,24 @@ while True:
                             e_lista_counter[esplosione] = 0
                             lista_b.remove(bomba)
                             break
+                for osp in o_lista:
+                        if bomba.rect.colliderect(osp.rect):
+                            osp.colpita = True
+                            esplosione = Esplosione1((bomba.rect.x - 50), bomba.rect.y)
+                            osp_esp_temp = {'casa': casa, 'esplosione': esplosione}
+                            o_lista_temp.append(osp_esp_temp)
+                            o_lista_counter[esplosione] = 0
+                            lista_b.remove(bomba)
+                            perc = round(case_distrutte/bombe_lanciate, 2)
+                            classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                            with open('classifica.txt', 'w', encoding='utf-8') as f:
+                                for key,value in classifica.items():
+                                    f.write(f"{key}: {value}\n")
+                            c_lista = libera_gioco(c_lista)
+                            o_lista = libera_gioco(o_lista)
+                            m_lista = libera_gioco(m_lista)
+                            lista_b = libera_gioco(lista_b)
+                        # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
 
 
             if bomba.rect.y >= 510:
@@ -263,16 +342,38 @@ while True:
         aereo.muoviti(vel_x, vel_y) 
         aereo.ruota(acc_y, vel_x)
         aereo.stampa(screen, acc_y)
+
         if aereo.rect.y >= 490:
             esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
             e1_lista[esp1] = 0
             a_lista.remove(aereo)
+
+            perc = round(case_distrutte/bombe_lanciate, 2)
+            classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+            for key,value in classifica.items():
+                f.write(f"{key}: {value}\n")
+
+            c_lista = libera_gioco(c_lista)
+            o_lista = libera_gioco(o_lista)
+            m_lista = libera_gioco(m_lista)
+            lista_b = libera_gioco(lista_b)
              # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
+
         for casa in c_lista:
             if aereo.rect.colliderect(casa.rect):
                 esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
                 e1_lista[esp1] = 0
                 a_lista.remove(aereo)
+            
+            perc = round(case_distrutte/bombe_lanciate, 2)
+            classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+            for key,value in classifica.items():
+                f.write(f"{key}: {value}\n")
+
+                c_lista = libera_gioco(c_lista)
+                o_lista = libera_gioco(o_lista)
+                m_lista = libera_gioco(m_lista)
+                lista_b = libera_gioco(lista_b)
                 # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -296,6 +397,8 @@ while True:
 
 
     if not c_lista:
+        case_distrutte += n_casa
+        bombe_lanciate += b
         livello += 1
         b = 0
 
