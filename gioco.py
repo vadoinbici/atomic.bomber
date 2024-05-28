@@ -359,6 +359,22 @@ while True:
             lista_b = libera_gioco(lista_b)
              # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
 
+        for osp in o_lista:
+            if aereo.rect.colliderect(osp.rect):
+                esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
+                e1_lista[esp1] = 0
+                a_lista.remove(aereo)
+            
+            perc = round(case_distrutte/bombe_lanciate, 2)
+            classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+            for key,value in classifica.items():
+                f.write(f"{key}: {value}\n")
+
+            c_lista = libera_gioco(c_lista)
+            o_lista = libera_gioco(o_lista)
+            m_lista = libera_gioco(m_lista)
+            lista_b = libera_gioco(lista_b)
+        # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
         for casa in c_lista:
             if aereo.rect.colliderect(casa.rect):
                 esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
@@ -389,11 +405,6 @@ while True:
             m_lista.remove(missile)
             a_lista.remove(aereo)
              # METTERE LA SCHERMATA GAME OVER ////////////////////////////////////////////////////////////////////////////////
-
-
-    
-
-
 
 
     if not c_lista:

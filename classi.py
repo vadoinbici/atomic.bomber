@@ -151,10 +151,10 @@ class Bomba:
         return False 
 
 class Casa:
-    def __init__ (self, image_case, c_lista):
+    def __init__ (self, image_case, og_lista):
         self.image_case = image_case
         self.posizione = []
-        self.c_lista = c_lista
+        self.c_lista = og_lista
         self.generazione_pos()
         self.colpita = False
 
@@ -189,7 +189,43 @@ class Casa:
     
     def stampa (self,screen):
         screen.blit(self.image, self.rect.topleft)
+
+class Ospedale:
+    def __init__ (self, image_osp, og_lista):
+        self.image_case = image_osp
+        self.posizione = []
+        self.c_lista = og_lista
+        self.generazione_pos()
+        self.colpita = False
+
+    def generazione_pos (self):
+        while True:
+            x = randint(10,1000)
+            n = randint(1,2)
+            self.image = pygame.image.load(self.image_case[n])
+            self.crea_rect(n,x)
+            
+            collision = False
+            for cas in self.c_lista:
+                if self.rect.colliderect(cas.rect):
+                    collision = True
+                    break
+            if not collision:
+                break
+            
+    def crea_rect(self, n,x):
+        if n == 1:
+            self.image = pygame.transform.scale(self.image, (120,80))
+            self.rect = pygame.Rect(x,470,120,80)
+            self.n = n
+        elif n==2:
+            self.image = pygame.transform.scale(self.image, (70,50))
+            self.rect = pygame.Rect(x,510,70,50)
+            self.n = n
     
+    def stampa (self,screen):
+        screen.blit(self.image, self.rect.topleft)
+
 class Esplosione1:
     def __init__ (self, x, y):
         self.image = pygame.image.load("immagini/esplosione.png")
