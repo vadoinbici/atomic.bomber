@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-4: {'case distrutte': 10, 'precisione': 83.0, 'bombe lanciate': 12}
-=======
-4: {'case distrutte': 12, 'precisione': 75.0, 'bombe lanciate': 16}
->>>>>>> ab3a42c224ce6c4014a8c3e684eb3876532b5925
+8: {'case distrutte': 27, 'precisione': 93.0, 'bombe lanciate': 29}
