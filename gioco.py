@@ -51,10 +51,15 @@ while caricamento:
 from classi import Aereo
 from classi import Bomba
 from classi import Casa
+from classi import Ospedale
 from classi import Missile
 from classi import Esplosione1
 from classi import Esplosione2
 
+
+def libera_gioco(self, r_lista):
+    r_lista.clear()
+    return (r_lista)
 
 def mostra_testo(screen, testo, x, y):
     font = pygame.font.SysFont('Eras Demi ITC', 36)
@@ -70,6 +75,12 @@ image_case[1]= "immagini/casa11.png"
 image_case[2]= "immagini/casa22.png"
 image_case[3]= "immagini/casa33.png"
 
+image_osp = {}
+image_osp[1]= "immagini/ospedale1.png"
+image_osp[2]= "immagini/ospedale2.png"
+
+og_lista = []
+o_lista = []
 c_lista = []
 ostacoli_rect_lista = []
 a_lista = []
@@ -132,6 +143,13 @@ while True:
                 b = 0
                 m_lista = []
                 e_lista_counter = {}
+                og_lista = []
+                o_lista = []
+                c_lista = []
+                ostacoli_rect_lista = []
+                a_lista = []
+                aereo = Aereo (1,0,200,200)
+                a_lista.append(aereo)
 
 
     else:
@@ -147,39 +165,68 @@ while True:
                     c_lista.append(casa)
             for casa in c_lista:
                 casa.stampa(screen)
+        
         if 4 <= livello <= 7:
             if not c_lista:
                 pygame.time.set_timer(ostacoli_timer, 2000)
                 n_casa = 4
+                n_osp = 1
                 bmax = 10
                 bombe_rimanenti = bmax
                 for i in range(n_casa):
                     casa = Casa(image_case,c_lista)
                     c_lista.append(casa)
+                    og_lista.append(casa)
+                for i in range(n_osp):
+                    osp = Ospedale(image_osp, og_lista)
+                    o_lista.append(osp)
+                    og_lista.append(osp)
             for casa in c_lista:
                 casa.stampa(screen)
+            for osp in o_lista:
+                osp.stampa(screen)
+        
         if 8 <= livello <= 10:
+            o_lista = libera_gioco(o_lista)
             if not c_lista:
                 pygame.time.set_timer(ostacoli_timer, 1500)
                 n_casa = 4
+                n_osp = 2
                 bmax = 8
                 bombe_rimanenti = bmax
                 for i in range(n_casa):
                     casa = Casa(image_case,c_lista)
                     c_lista.append(casa)
+                    og_lista.append(casa)
+                for i in range(n_osp):
+                    osp = Ospedale(image_osp, og_lista)
+                    o_lista.append(osp)
+                    og_lista.append(osp)
             for casa in c_lista:
                 casa.stampa(screen)
+            for osp in o_lista:
+                osp.stampa(screen)
+        
         if livello > 10:
+            o_lista = libera_gioco(o_lista)
             if not c_lista:
                 pygame.time.set_timer(ostacoli_timer, 1000)
                 n_casa = 5
+                n_osp = 3
                 bmax = 5
                 bombe_rimanenti = bmax
                 for i in range(n_casa):
-                    casa = Casa(image_case.c_lista)
+                    casa = Casa(image_case,c_lista)
                     c_lista.append(casa)
+                    og_lista.append(casa)
+                for i in range(n_osp):
+                    osp = Ospedale(image_osp, og_lista)
+                    o_lista.append(osp)
+                    og_lista.append(osp)
             for casa in c_lista:
                 casa.stampa(screen)
+            for osp in o_lista:
+                osp.stampa(screen)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -230,11 +277,12 @@ while True:
                 lista_b.remove(bomba)
             
             for casa_esp in e_lista_temp:  # Controlla solo le case che sono in attesa di essere rimosse
-                casa = casa_esp['casa1']
+                casa = casa_esp['casa']
                 if bomba.rect.colliderect(casa.rect):
                     lista_b.remove(bomba)
                     break
-            
+
+
             else:
                 for casa in c_lista:
                         if bomba.rect.colliderect(casa.rect):
@@ -245,6 +293,8 @@ while True:
                             e_lista_counter[esplosione] = 0
                             lista_b.remove(bomba)
                             break
+
+
 
 
             if bomba.rect.y >= 510:
@@ -318,6 +368,8 @@ while True:
     if not c_lista:
         livello += 1
         b = 0
+        o_lista.clear()
+        og_lista.clear()
     if bombe_rimanenti==0 and not lista_b:
         game_over= True
 
