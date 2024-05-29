@@ -126,13 +126,13 @@ b = 0
 b_controllo = False
 m_lista = []
 e_lista_counter = {}
-bombe_sganciate = 1
-case_distrutte = 0
+bombe_lanciate = 1
+case_distrutte = 1
 livello = 1
 game_over = False
 testo_schermo = True
-
-
+classifica = {}
+tempo = True
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
 #-----------------------------------------------------------------      
@@ -172,12 +172,14 @@ while True:
                 b_controllo = False
                 m_lista = []
                 e_lista_counter = {}
-                bombe_sganciate = 1
-                case_distrutte = 0
+                bombe_lanciate = 1
+                case_distrutte = 1
                 livello = 1
                 game_over = False
                 testo_schermo = True
-
+                classifica = {}
+                tempo = True
+                livello = 1
 
 
     else:
@@ -291,10 +293,11 @@ while True:
                     if b != bmax:
                         b += 1
                         bombe_rimanenti -= 1 
+                        bombe_lanciate += 1
                         b_lista.append(bomba)
                         b_controllo = True
         if event.type == ostacoli_timer:
-            y = randint(50,430)
+            y = randint(10,430)
             x = randint(1300,1500)
             missile = Missile(x, y)
             m_lista.append(missile)
@@ -322,11 +325,12 @@ while True:
                 for casa in c_lista:
                         if bomba.rect.colliderect(casa.rect):
                             casa.colpita = True
-                            esplosione = Esplosione1((bomba.rect.x - 50), bomba.rect.y)
+                            esplosione = Esplosione1((bomba.rect.x - 25), bomba.rect.y)
                             casa_esp_temp = {'casa': casa, 'esplosione': esplosione}
                             e_lista_temp.append(casa_esp_temp)
                             e_lista_counter[esplosione] = 0
                             b_lista.remove(bomba)
+                            case_distrutte += 1
                             break
             
             for osp_esp in o_lista_temp:  
@@ -341,7 +345,7 @@ while True:
                 for osp in o_lista:
                         if bomba.rect.colliderect(osp.rect):
                             osp.colpita = True
-                            esplosione = Esplosione1((bomba.rect.x - 50), bomba.rect.y)
+                            esplosione = Esplosione1((bomba.rect.x - 25), bomba.rect.y)
                             osp_esp_temp = {'ospedale': osp, 'esplosione': esplosione}
                             e_lista_temp1.append(osp_esp_temp)
                             e_lista_counter[esplosione] = 0
@@ -381,7 +385,11 @@ while True:
             if e_lista_counter[esplosione] > 20:
                 o_lista.remove(osp)
                 e_lista_temp1.remove(osp_esp)
-                
+                perc = round(case_distrutte/bombe_lanciate, 2)
+                classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                with open('classifica.txt', 'w', encoding='UTF-8') as f:
+                    for key,value in classifica.items():
+                        f.write(f"{key}: {value}\n")
                 m_lista.clear()
                 e_lista.clear()
                 c_lista.clear()
@@ -416,6 +424,11 @@ while True:
             esp1.appare(screen)
             pygame.display.flip()
             pygame.time.delay(300)
+            perc = round(case_distrutte/bombe_lanciate, 2)
+            classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+            with open('classifica.txt', 'w', encoding='UTF-8') as f:
+                for key,value in classifica.items():
+                    f.write(f"{key}: {value}\n")
             e1_lista.clear()
             m_lista.clear()
             e_lista.clear()
@@ -434,6 +447,36 @@ while True:
                 pygame.display.flip()
                 pygame.time.delay(300)
                 a_lista.remove(aereo)
+
+                perc = round(case_distrutte/bombe_lanciate, 2)
+                classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                with open('classifica.txt', 'w', encoding='UTF-8') as f:
+                    for key,value in classifica.items():
+                        f.write(f"{key}: {value}\n")
+                e1_lista.clear()
+                m_lista.clear()
+                e_lista.clear()
+                c_lista.clear()
+                o_lista.clear()
+                b_lista.clear()
+                e_lista_temp1.clear()
+                a_lista.clear()
+                testo_schermo = False
+                game_over = True
+        
+        for osp in o_lista:
+            if aereo.rect.colliderect(osp.rect):
+                esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
+                esp1.appare(screen)
+                pygame.display.flip()
+                pygame.time.delay(300)
+                a_lista.remove(aereo)
+
+                perc = round(case_distrutte/bombe_lanciate, 2)
+                classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                with open('classifica.txt', 'w', encoding='UTF-8') as f:
+                    for key,value in classifica.items():
+                        f.write(f"{key}: {value}\n")
                 e1_lista.clear()
                 m_lista.clear()
                 e_lista.clear()
@@ -455,17 +498,20 @@ while True:
         if aereo.rect.x<1200:
             if aereo.rect.colliderect(missile.rect):
                 esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
-                m_lista.remove(missile)
-                a_lista.remove(aereo)
                 esp1.appare(screen)
                 pygame.display.flip()
                 pygame.time.delay(300)
                 m_lista.remove(missile)
                 a_lista.remove(aereo)
 
+                perc = round(case_distrutte/bombe_lanciate, 2)
+                classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                with open('classifica.txt', 'w', encoding='UTF-8') as f:
+                    for key,value in classifica.items():
+                        f.write(f"{key}: {value}\n")
+
                 m_lista.clear()
                 e_lista.clear()
-                c_lista.clear()
                 o_lista.clear()
                 b_lista.clear()
                 e_lista_temp1.clear()
@@ -476,16 +522,32 @@ while True:
             
 
     if not c_lista:
+        
+        if tempo:
+            if bombe_lanciate != 0:
+                bombe_lanciate -= 1
+                case_distrutte -= 1
+                tempo = False
+
         livello += 1
+
         o_lista.clear()
         og_lista.clear()
         b = 0
         o_lista.clear()
         og_lista.clear()
+    
     if bombe_rimanenti==0 and not b_lista:
         #aggiungi scritta "hai finito le bombe"
         pygame.display.flip()
         pygame.time.delay(300) # aggiungi se vuoi far si che si legga per più tempo
+
+        perc = round(case_distrutte/bombe_lanciate, 2)
+        classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+        with open('classifica.txt', 'w', encoding='UTF-8') as f:
+            for key,value in classifica.items():
+                f.write(f"{key}: {value}\n")
+
         e1_lista.clear()
         m_lista.clear()
         e_lista.clear()
@@ -495,6 +557,7 @@ while True:
         e_lista_temp1.clear()
         a_lista.clear()
         testo_schermo = False
+
         game_over= True
 
     pygame.display.update()

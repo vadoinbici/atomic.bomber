@@ -102,7 +102,7 @@ class Aereo:
             self.rect.x = 1200
 
     def controlloy (self, vel_y):
-        if self.rect.y < -20:
+        if self.rect.y < -10:
             return (-vel_y)
         else:
             return (vel_y)
