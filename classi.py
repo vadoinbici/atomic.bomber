@@ -151,10 +151,10 @@ class Bomba:
         return False 
 
 class Casa:
-    def __init__ (self, image_case, og_lista):
+    def __init__ (self, image_case, c_lista):
         self.image_case = image_case
         self.posizione = []
-        self.c_lista = og_lista
+        self.c_lista = c_lista
         self.generazione_pos()
         self.colpita = False
 
