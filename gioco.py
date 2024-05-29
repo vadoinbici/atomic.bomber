@@ -76,6 +76,7 @@ def leggi_file(nome_file):
 def scrivi_record(record):
     with open('record.txt', 'r+', encoding='utf-8') as f:
         f.truncate(0)
+        f.seek(0)
     with open('record.txt', 'w', encoding='utf-8') as f:
         for key, value in record.items():
             f.write(f"{key}: {value}\n")
@@ -210,11 +211,11 @@ while True:
                 e_lista_counter = {}
                 bombe_lanciate = 1
                 case_distrutte = 1
+                livello = 0
                 game_over = False
                 testo_schermo = True
                 classifica = {}
                 tempo = True
-                livello = 1
 
 
     else:
@@ -424,6 +425,7 @@ while True:
                 classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
                 with open('classifica.txt', 'r+', encoding='utf-8') as f:
                     f.truncate(0)
+                    f.seek(0)
                 with open('classifica.txt', 'w', encoding='UTF-8') as f:
                     for key,value in classifica.items():
                         f.write(f"{key}: {value}\n")
@@ -465,6 +467,7 @@ while True:
             classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
             with open('classifica.txt', 'r+', encoding='utf-8') as f:
                 f.truncate(0)
+                f.seek(0)
             with open('classifica.txt', 'w', encoding='UTF-8') as f:
                 for key,value in classifica.items():
                     f.write(f"{key}: {value}\n")
@@ -492,6 +495,7 @@ while True:
                 
                 with open('classifica.txt', 'r+', encoding='utf-8') as f:
                     f.truncate(0)
+                    f.seek(0)
                 with open('classifica.txt', 'w', encoding='UTF-8') as f:
                     for key,value in classifica.items():
                         f.write(f"{key}: {value}\n")
@@ -518,6 +522,7 @@ while True:
                 classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
                 with open('classifica.txt', 'r+', encoding='utf-8') as f:
                     f.truncate(0)
+                    f.seek(0)
                 with open('classifica.txt', 'w', encoding='UTF-8') as f:
                     for key,value in classifica.items():
                         f.write(f"{key}: {value}\n")
@@ -553,6 +558,7 @@ while True:
                 
                 with open('classifica.txt', 'r+', encoding='utf-8') as f:
                     f.truncate(0)
+                    f.seek(0)
 
                 with open('classifica.txt', 'w', encoding='UTF-8') as f:
                     for key,value in classifica.items():
@@ -595,6 +601,7 @@ while True:
         
         with open('classifica.txt', 'r+', encoding='utf-8') as f:
             f.truncate(0)
+            f.seek(0)
         with open('classifica.txt', 'w', encoding='UTF-8') as f:
             for key,value in classifica.items():
                 f.write(f"{key}: {value}\n")
