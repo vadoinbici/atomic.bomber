@@ -58,21 +58,6 @@ while caricamento:
 # acc_x = 0.5
 # acc_y = 0.2
 
-
-from classi import Aereo
-from classi import Bomba
-from classi import Casa
-from classi import Ospedale
-from classi import Missile
-from classi import Esplosione1
-from classi import Esplosione2
-
-
-def libera_gioco(self, r_lista):
-    r_lista.clear()
-    return (r_lista)
-
-
 def mostra_testo(screen, testo, x, y):
     font = pygame.font.SysFont('Eras Demi ITC', 36)
     testo_surf = font.render(testo, True, 'Black')
@@ -105,13 +90,17 @@ ostacoli_rect_lista = []
 a_lista = []
 aereo = Aereo (1,0,200,200)
 a_lista.append(aereo)
+ostacoli_timer = pygame.USEREVENT + 1
 # screen = pygame.display.set_mode((1200,600))
 # pygame.display.set_caption('Atomic bomb')
-
 clock = pygame.time.Clock()
-
 sfondox = pygame.image.load('immagini/sfondo2.1.png').convert()
 sfondo = pygame.transform.scale(sfondox, (1200, 750))
+
+
+#-----------------------------------------------------------------
+#-----------------------------------------------------------------  
+#-----------------------------------------------------------------      
 
 c_lista = []
 o_lista = []
@@ -122,8 +111,10 @@ aereo = Aereo (1,0,200,200)
 a_lista.append(aereo)
 temp = 0
 e_lista_temp = []
+e_lista_temp1 = []
+o_lista_temp = []
 e_lista = []
-lista_b = []
+b_lista = []
 e1_lista = {}
 b_vel_y = 1
 b_vel_x = 1
@@ -135,15 +126,17 @@ b = 0
 b_controllo = False
 m_lista = []
 e_lista_counter = {}
-
 bombe_sganciate = 1
 case_distrutte = 0
-
-
-ostacoli_timer = pygame.USEREVENT + 1
-
 livello = 1
 game_over = False
+testo_schermo = True
+
+
+#-----------------------------------------------------------------
+#-----------------------------------------------------------------  
+#-----------------------------------------------------------------      
+
 while True:
     if game_over:
         screen.blit(sfondo_over, (0,0))
@@ -155,34 +148,36 @@ while True:
                 exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 game_over = False
-                livello = 1
+                c_lista = []
+                o_lista = []
+                og_lista = []
+                ostacoli_rect_lista = []
                 a_lista = []
                 aereo = Aereo (1,0,200,200)
                 a_lista.append(aereo)
+                temp = 0
                 e_lista_temp = []
+                e_lista_temp1 = []
+                o_lista_temp = []
                 e_lista = []
-                lista_b = []
+                b_lista = []
                 e1_lista = {}
+                b_vel_y = 1
+                b_vel_x = 1
                 vel_x = 2
                 vel_y = 0
                 acc_x = 0
                 acc_y = 0
                 b = 0
+                b_controllo = False
                 m_lista = []
                 e_lista_counter = {}
-                og_lista = []
-                o_lista = []
-                c_lista = []
-                ostacoli_rect_lista = []
-                a_lista = []
-                aereo = Aereo (1,0,200,200)
-                a_lista.append(aereo)
+                bombe_sganciate = 1
+                case_distrutte = 0
+                livello = 1
+                game_over = False
+                testo_schermo = True
 
-                c_lista = []
-                ostacoli_rect_lista = []
-                a_lista = []
-                aereo = Aereo (1,0,200,200)
-                a_lista.append(aereo)
 
 
     else:
@@ -224,7 +219,6 @@ while True:
                 osp.stampa(screen)
         
         if 8 <= livello <= 10:
-            o_lista = libera_gioco(o_lista)
             if not c_lista:
                 pygame.time.set_timer(ostacoli_timer, 1500)
                 n_casa = 4
@@ -245,7 +239,6 @@ while True:
                 osp.stampa(screen)
         
         if livello > 10:
-            o_lista = libera_gioco(o_lista)
             if not c_lista:
                 pygame.time.set_timer(ostacoli_timer, 1000)
                 n_casa = 5
@@ -294,11 +287,11 @@ while True:
             elif event.key == pygame.K_SPACE:
                 i = 0
                 bomba = Bomba(aereo.vel_x, aereo.vel_y, aereo.rect.x, aereo.rect.y)
-                if len(lista_b) < 3:
+                if len(b_lista) < 3:
                     if b != bmax:
                         b += 1
                         bombe_rimanenti -= 1 
-                        lista_b.append(bomba)
+                        b_lista.append(bomba)
                         b_controllo = True
         if event.type == ostacoli_timer:
             y = randint(50,430)
@@ -310,18 +303,19 @@ while True:
 
 
     if b_controllo:
-        for bomba in lista_b:
+        for bomba in b_lista:
             b_vel_y = bomba.bomba_y(b_vel_y)
             bomba.bomb_move(bomba.b_vel_x, b_vel_y)
             bomba.stampa(screen)
             if bomba.controllo():  
-                lista_b.remove(bomba)
+                b_lista.remove(bomba)
             
             for casa_esp in e_lista_temp:  # Controlla solo le case che sono in attesa di essere rimosse
                 casa = casa_esp['casa']
                 if bomba.rect.colliderect(casa.rect):
-                    lista_b.remove(bomba)
+                    b_lista.remove(bomba)
                     break
+            
 
 
             else:
@@ -332,8 +326,28 @@ while True:
                             casa_esp_temp = {'casa': casa, 'esplosione': esplosione}
                             e_lista_temp.append(casa_esp_temp)
                             e_lista_counter[esplosione] = 0
-                            lista_b.remove(bomba)
+                            b_lista.remove(bomba)
                             break
+            
+            for osp_esp in o_lista_temp:  
+                osp = osp_esp['ospedale']
+                if bomba.rect.colliderect(osp.rect):
+                    b_lista.remove(bomba)
+                    break
+            
+
+
+            else:
+                for osp in o_lista:
+                        if bomba.rect.colliderect(osp.rect):
+                            osp.colpita = True
+                            esplosione = Esplosione1((bomba.rect.x - 50), bomba.rect.y)
+                            osp_esp_temp = {'ospedale': osp, 'esplosione': esplosione}
+                            e_lista_temp1.append(osp_esp_temp)
+                            e_lista_counter[esplosione] = 0
+                            b_lista.remove(bomba)
+                            break
+
 
 
 
@@ -344,7 +358,7 @@ while True:
             if bomba.rect.y >= 510:
                 esp1 = Esplosione2((bomba.rect.x), bomba.rect.y)
                 e1_lista[esp1] = 0
-                lista_b.remove(bomba)
+                b_lista.remove(bomba)
 
     if e_lista_temp:
         for casa_esp in e_lista_temp:
@@ -356,6 +370,27 @@ while True:
             if e_lista_counter[esplosione] > 20:
                 c_lista.remove(casa)
                 e_lista_temp.remove(casa_esp)
+        
+    if e_lista_temp1:
+        for osp_esp in e_lista_temp1:
+            esplosione = osp_esp['esplosione']
+            casa = osp_esp['ospedale'] 
+            esplosione.appare(screen)
+            e_lista_counter[esplosione] += 1
+
+            if e_lista_counter[esplosione] > 20:
+                o_lista.remove(osp)
+                e_lista_temp1.remove(osp_esp)
+                
+                m_lista.clear()
+                e_lista.clear()
+                c_lista.clear()
+                o_lista.clear()
+                b_lista.clear()
+                e_lista_temp1.clear()
+                a_lista.clear()
+                testo_schermo = False
+                game_over = True
 
     if e1_lista:
         for esp1 in e1_lista:
@@ -365,10 +400,6 @@ while True:
         else:
             del e1_lista[esp1]
 
-
-    # missile = Missile(1300, 100)
-    # m_lista.append(missile)
-    # ostacoli_rect_lista = missile.movimento(ostacoli_rect_lista)
  
 
     for aereo in a_lista:
@@ -382,31 +413,66 @@ while True:
         aereo.stampa(screen, acc_y)
         if aereo.rect.y >= 490:
             esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
-            e1_lista[esp1] = 0
-            a_lista.remove(aereo)
+            esp1.appare(screen)
+            pygame.display.flip()
+            pygame.time.delay(300)
+            e1_lista.clear()
+            m_lista.clear()
+            e_lista.clear()
+            c_lista.clear()
+            o_lista.clear()
+            b_lista.clear()
+            e_lista_temp1.clear()
+            a_lista.clear()
+            testo_schermo = False
             game_over= True
             
         for casa in c_lista:
             if aereo.rect.colliderect(casa.rect):
                 esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
-                e1_lista[esp1] = 0
+                esp1.appare(screen)
+                pygame.display.flip()
+                pygame.time.delay(300)
                 a_lista.remove(aereo)
+                e1_lista.clear()
+                m_lista.clear()
+                e_lista.clear()
+                c_lista.clear()
+                o_lista.clear()
+                b_lista.clear()
+                e_lista_temp1.clear()
+                a_lista.clear()
+                testo_schermo = False
                 game_over = True
                 
 
-
-    mostra_testo(screen, f"Livello: {livello}", 10, 10)
-    mostra_testo(screen, f"Bombe rimanenti: {bombe_rimanenti}", 200, 10)
+    if testo_schermo:
+        mostra_testo(screen, f"Livello: {livello}", 10, 10)
+        mostra_testo(screen, f"Bombe rimanenti: {bombe_rimanenti}", 200, 10)
 
     for missile in m_lista:
         missile.movimento(screen)
-        if aereo.rect.colliderect(missile.rect):
-            esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
+        if aereo.rect.x<1200:
+            if aereo.rect.colliderect(missile.rect):
+                esp1 = Esplosione1((aereo.rect.x), aereo.rect.y)
+                m_lista.remove(missile)
+                a_lista.remove(aereo)
+                esp1.appare(screen)
+                pygame.display.flip()
+                pygame.time.delay(300)
+                m_lista.remove(missile)
+                a_lista.remove(aereo)
 
-            e1_lista[esp1] = 0
-            m_lista.remove(missile)
-            a_lista.remove(aereo)
-            game_over = True
+                m_lista.clear()
+                e_lista.clear()
+                c_lista.clear()
+                o_lista.clear()
+                b_lista.clear()
+                e_lista_temp1.clear()
+                a_lista.clear()
+                e1_lista.clear()
+                testo_schermo = False
+                game_over = True
             
 
     if not c_lista:
@@ -416,7 +482,19 @@ while True:
         b = 0
         o_lista.clear()
         og_lista.clear()
-    if bombe_rimanenti==0 and not lista_b:
+    if bombe_rimanenti==0 and not b_lista:
+        #aggiungi scritta "hai finito le bombe"
+        pygame.display.flip()
+        pygame.time.delay(300) # aggiungi se vuoi far si che si legga per più tempo
+        e1_lista.clear()
+        m_lista.clear()
+        e_lista.clear()
+        c_lista.clear()
+        o_lista.clear()
+        b_lista.clear()
+        e_lista_temp1.clear()
+        a_lista.clear()
+        testo_schermo = False
         game_over= True
 
     pygame.display.update()
