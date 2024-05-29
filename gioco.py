@@ -2,6 +2,7 @@ import pygame
 from random import randint
 from sys import exit
 import time
+import ast
 
 
 from classi import Aereo
@@ -68,7 +69,7 @@ def leggi_file(nome_file):
     with open(nome_file, 'r', encoding='utf-8') as f:
         for riga in f:
             key, value = riga.strip().split(': ', 1)
-            classifica[int(key)] = value
+            classifica[int(key)] = ast.literal_eval(value)
 
         return classifica
 
@@ -80,12 +81,19 @@ def scrivi_record(record):
             f.write(f"{key}: {value}\n")
 
 def confronto(class_temp, record):
-    key, value = class_temp.items()
-    key1, value1 = record.items()
-    if key > key1:
-        if value['case distrutte'] > value1['case distrutte']:
-            if value['precisione'] > value1['precisione']:
+    for key, value in class_temp.items():
+        for key1, value1 in record.items():
+            if key > key1:
                 scrivi_record(class_temp)
+                break
+            if key == key1:
+                if value['case distrutte'] > value1['case distrutte']:
+                    scrivi_record(class_temp)
+                    break
+                if value['case distrutte'] == value1['case distrutte']:
+                    if value['precisione'] > value1['precisione']:
+                        scrivi_record(class_temp)
+                        break
 
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
@@ -202,7 +210,6 @@ while True:
                 e_lista_counter = {}
                 bombe_lanciate = 1
                 case_distrutte = 1
-                livello = 1
                 game_over = False
                 testo_schermo = True
                 classifica = {}
