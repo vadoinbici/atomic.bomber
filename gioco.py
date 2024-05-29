@@ -62,7 +62,31 @@ def mostra_testo(screen, testo, x, y):
     font = pygame.font.SysFont('Eras Demi ITC', 36)
     testo_surf = font.render(testo, True, 'Black')
     screen.blit(testo_surf, (x, y))
-    
+
+def leggi_file(nome_file):
+    classifica = {}
+    with open(nome_file, 'r', encoding='utf-8') as f:
+        for riga in f:
+            key, value = riga.strip().split(': ', 1)
+            classifica[int(key)] = value
+
+        return classifica
+
+def scrivi_record(record):
+    with open('record.txt', 'r+', encoding='utf-8') as f:
+        f.truncate(0)
+    with open('record.txt', 'w', encoding='utf-8') as f:
+        for key, value in record.items():
+            f.write(f"{key}: {value}\n")
+
+def confronto(class_temp, record):
+    key, value = class_temp.items()
+    key1, value1 = record.items()
+    if key > key1:
+        if value['case distrutte'] > value1['case distrutte']:
+            if value['precisione'] > value1['precisione']:
+                scrivi_record(class_temp)
+
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
 #-----------------------------------------------------------------            
@@ -142,6 +166,10 @@ while True:
         screen.blit(sfondo_over, (0,0))
         mostra_testo(screen, "Prendi INVIO per ricominciare", 300, 500)
         pygame.display.update()
+        class_temp = leggi_file('classifica.txt')
+        record = leggi_file('record.txt')
+        confronto(class_temp, record)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -387,6 +415,8 @@ while True:
                 e_lista_temp1.remove(osp_esp)
                 perc = round(case_distrutte/bombe_lanciate, 2)
                 classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                with open('classifica.txt', 'r+', encoding='utf-8') as f:
+                    f.truncate(0)
                 with open('classifica.txt', 'w', encoding='UTF-8') as f:
                     for key,value in classifica.items():
                         f.write(f"{key}: {value}\n")
@@ -426,6 +456,8 @@ while True:
             pygame.time.delay(300)
             perc = round(case_distrutte/bombe_lanciate, 2)
             classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+            with open('classifica.txt', 'r+', encoding='utf-8') as f:
+                f.truncate(0)
             with open('classifica.txt', 'w', encoding='UTF-8') as f:
                 for key,value in classifica.items():
                     f.write(f"{key}: {value}\n")
@@ -450,6 +482,9 @@ while True:
 
                 perc = round(case_distrutte/bombe_lanciate, 2)
                 classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                
+                with open('classifica.txt', 'r+', encoding='utf-8') as f:
+                    f.truncate(0)
                 with open('classifica.txt', 'w', encoding='UTF-8') as f:
                     for key,value in classifica.items():
                         f.write(f"{key}: {value}\n")
@@ -474,6 +509,8 @@ while True:
 
                 perc = round(case_distrutte/bombe_lanciate, 2)
                 classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                with open('classifica.txt', 'r+', encoding='utf-8') as f:
+                    f.truncate(0)
                 with open('classifica.txt', 'w', encoding='UTF-8') as f:
                     for key,value in classifica.items():
                         f.write(f"{key}: {value}\n")
@@ -506,6 +543,10 @@ while True:
 
                 perc = round(case_distrutte/bombe_lanciate, 2)
                 classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+                
+                with open('classifica.txt', 'r+', encoding='utf-8') as f:
+                    f.truncate(0)
+
                 with open('classifica.txt', 'w', encoding='UTF-8') as f:
                     for key,value in classifica.items():
                         f.write(f"{key}: {value}\n")
@@ -544,6 +585,9 @@ while True:
 
         perc = round(case_distrutte/bombe_lanciate, 2)
         classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}
+        
+        with open('classifica.txt', 'r+', encoding='utf-8') as f:
+            f.truncate(0)
         with open('classifica.txt', 'w', encoding='UTF-8') as f:
             for key,value in classifica.items():
                 f.write(f"{key}: {value}\n")
