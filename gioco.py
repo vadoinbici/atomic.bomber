@@ -592,9 +592,9 @@ while True:
         og_lista.clear()
     
     if bombe_rimanenti==0 and not b_lista:
-        #aggiungi scritta "hai finito le bombe"
+        mostra_testo(screen, "Hai finito le bombe", 400, 10)
         pygame.display.flip()
-        pygame.time.delay(300) # aggiungi se vuoi far si che si legga per più tempo
+        pygame.time.delay(500) # aggiungi se vuoi far si che si legga per più tempo
 
         perc = round(case_distrutte/bombe_lanciate, 2)
         classifica[livello] = {'case distrutte': case_distrutte, 'precisione': perc*100, 'bombe lanciate': bombe_lanciate,}

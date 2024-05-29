@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 8: {'case distrutte': 25, 'precisione': 96.0, 'bombe lanciate': 26}
+=======
+5: {'case distrutte': 13, 'precisione': 87.0, 'bombe lanciate': 15}
+>>>>>>> ab3a42c224ce6c4014a8c3e684eb3876532b5925

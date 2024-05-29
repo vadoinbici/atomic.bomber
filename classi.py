@@ -215,12 +215,12 @@ class Ospedale:
             
     def crea_rect(self, n,x):
         if n == 2:
-            self.image = pygame.transform.scale(self.image, (120,80))
-            self.rect = pygame.Rect(x,470,120,80)
+            self.image = pygame.transform.scale(self.image, (180,140))
+            self.rect = pygame.Rect(x,470,180,140)
             self.n = n
         elif n==1:
-            self.image = pygame.transform.scale(self.image, (80,60))
-            self.rect = pygame.Rect(x,500,70,50)
+            self.image = pygame.transform.scale(self.image, (140,100))
+            self.rect = pygame.Rect(x,460,140,100)
             self.n = n
     
     def stampa (self,screen):
