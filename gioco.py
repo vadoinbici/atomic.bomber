@@ -93,19 +93,33 @@ def scrivi_record(record):
             f.write(f"{key}: {value}\n")
 
 def confronto(class_temp, record):
-    for key, value in class_temp.items():
-        for key1, value1 in record.items():
-            if key > key1:
-                scrivi_record(class_temp)
-                break
-            if key == key1:
-                if value['case distrutte'] > value1['case distrutte']:
-                    scrivi_record(class_temp)
-                    break
-                if value['case distrutte'] == value1['case distrutte']:
-                    if value['precisione'] > value1['precisione']:
+    if record == {}:
+        record = class_temp
+        scrivi_record(record)
+    else:
+        for key, value in class_temp.items():
+            for key1, value1 in record.items():
+                    if key > key1:
                         scrivi_record(class_temp)
-                        break
+                        return True
+                    if key == key1:
+                        if value['case distrutte'] > value1['case distrutte']:
+                            scrivi_record(class_temp)
+                            return True
+                        if value['case distrutte'] == value1['case distrutte']:
+                            if value['precisione'] > value1['precisione']:
+                                scrivi_record(class_temp)
+                                return True
+
+                
+    return False
+
+
+
+
+        
+
+    
 
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
@@ -180,6 +194,7 @@ classifica = {}
 tempo = True
 conta = 0
 conta_controllo = False
+b_lista_del = []
 #-----------------------------------------------------------------
 #-----------------------------------------------------------------  
 #-----------------------------------------------------------------      
@@ -191,7 +206,13 @@ while True:
         if riscrivi:
             class_temp = leggi_file('classifica.txt')
             record = leggi_file('record.txt')
-            confronto(class_temp, record)
+            if confronto(class_temp, record):
+                record = leggi_file('record.txt')
+                
+
+                
+                
+            
             print(record)
         riscrivi = False
         for key, value in record.items():
@@ -233,18 +254,20 @@ while True:
                 acc_y = 0
                 b = 0
                 b_controllo = False
+                riscrivi = False
                 m_lista = []
                 e_lista_counter = {}
                 bombe_lanciate = 0
                 case_distrutte = 0
-                livello = 0
+                livello = 1
                 game_over = False
                 testo_schermo = True
                 classifica = {}
                 tempo = True
                 conta = 0
                 conta_controllo = False
-                
+                b_lista_del = []
+                    
 
 
     else:
@@ -305,11 +328,35 @@ while True:
             for osp in o_lista:
                 osp.stampa(screen)
         
-        if livello > 10: 
+        if 11 <= livello <= 15: 
             if not c_lista:
                 pygame.time.set_timer(ostacoli_timer, 1000)
                 n_casa = 4
-                n_osp = 3
+                n_osp = 2
+                bmax = 7
+                bombe_rimanenti = bmax
+                for i in range(n_casa):
+                    casa = Casa(image_case,c_lista)
+                    c_lista.append(casa)
+                    og_lista.append(casa)
+                for i in range(n_osp):
+
+                    osp = Ospedale(image_osp,og_lista)
+
+                    osp = Ospedale(image_osp, og_lista)
+
+                    o_lista.append(osp)
+                    og_lista.append(osp)
+            for casa in c_lista:
+                casa.stampa(screen)
+            for osp in o_lista:
+                osp.stampa(screen)
+        
+        if livello > 15: 
+            if not c_lista:
+                pygame.time.set_timer(ostacoli_timer, 500)
+                n_casa = 4
+                n_osp = 2
                 bmax = 7
                 bombe_rimanenti = bmax
                 for i in range(n_casa):
@@ -376,12 +423,12 @@ while True:
                 bomba.bomb_move(bomba.b_vel_x, b_vel_y)
                 bomba.stampa(screen)
                 if bomba.controllo():  
-                    b_lista.remove(bomba)
+                    b_lista_del.append(bomba)
                 
-                for casa_esp in e_lista_temp:  # Controlla solo le case che sono in attesa di essere rimosse
+                for casa_esp in e_lista_temp:  
                     casa = casa_esp['casa']
                     if bomba.rect.colliderect(casa.rect):
-                        b_lista.remove(bomba)
+                        b_lista_del.append(bomba)
                         break
                 
 
@@ -394,14 +441,14 @@ while True:
                                 casa_esp_temp = {'casa': casa, 'esplosione': esplosione}
                                 e_lista_temp.append(casa_esp_temp)
                                 e_lista_counter[esplosione] = 0
-                                b_lista.remove(bomba)
+                                b_lista_del.append(bomba)
                                 case_distrutte += 1
                                 break
                 
                 for osp_esp in o_lista_temp:  
                     osp = osp_esp['ospedale']
                     if bomba.rect.colliderect(osp.rect):
-                        b_lista.remove(bomba)
+                        b_lista_del.append(bomba)
                         break
                 
 
@@ -414,7 +461,7 @@ while True:
                                 osp_esp_temp = {'ospedale': osp, 'esplosione': esplosione}
                                 e_lista_temp1.append(osp_esp_temp)
                                 e_lista_counter[esplosione] = 0
-                                b_lista.remove(bomba)
+                                b_lista_del.append(bomba)
                                 break
 
 
@@ -427,7 +474,7 @@ while True:
                 if bomba.rect.y >= 510:
                     esp1 = Esplosione2((bomba.rect.x), bomba.rect.y)
                     e1_lista[esp1] = 0
-                    b_lista.remove(bomba)
+                    b_lista_del.append(bomba)
 
         if e_lista_temp:
             for casa_esp in e_lista_temp:
@@ -466,6 +513,7 @@ while True:
                     e_lista.clear()
                     c_lista.clear()
                     o_lista.clear()
+                    b_lista_del.clear()
                     b_lista.clear()
                     e_lista_temp1.clear()
                     a_lista.clear()
@@ -511,6 +559,7 @@ while True:
                 m_lista.clear()
                 e_lista.clear()
                 c_lista.clear()
+                b_lista_del.clear()
                 o_lista.clear()
                 b_lista.clear()
                 e_lista_temp1.clear()
@@ -540,6 +589,7 @@ while True:
                             f.write(f"{key}: {value}\n")
                     e1_lista.clear()
                     m_lista.clear()
+                    b_lista_del.clear()
                     e_lista.clear()
                     c_lista.clear()
                     o_lista.clear()
@@ -571,6 +621,7 @@ while True:
                             f.write(f"{key}: {value}\n")
                     e1_lista.clear()
                     m_lista.clear()
+                    b_lista_del.clear()
                     e_lista.clear()
                     c_lista.clear()
                     o_lista.clear()
@@ -619,6 +670,7 @@ while True:
                     m_lista.clear()
                     e_lista.clear()
                     o_lista.clear()
+                    b_lista_del.clear()
                     b_lista.clear()
                     e_lista_temp1.clear()
                     a_lista.clear()
@@ -664,6 +716,7 @@ while True:
                 e1_lista.clear()
                 m_lista.clear()
                 e_lista.clear()
+                b_lista_del.clear()
                 c_lista.clear()
                 o_lista.clear()
                 b_lista.clear()
@@ -684,7 +737,10 @@ while True:
                 if conta != 0:
                     conta = 0
                     conta_controlla = False
-
+            
+        for bomba in b_lista_del:
+            b_lista.remove(bomba)
+        b_lista_del.clear()
             
             
 
