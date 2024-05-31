@@ -1,1 +1,1 @@
-8: {'case distrutte': 25, 'precisione': 96.0, 'bombe lanciate': 26}
+10: {'case distrutte': 36, 'precisione': 100.0, 'bombe lanciate': 36}
