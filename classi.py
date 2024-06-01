@@ -215,8 +215,8 @@ class Ospedale:
             
     def crea_rect(self, n,x):
         if n == 2:
-            self.image = pygame.transform.scale(self.image, (180,140))
-            self.rect = pygame.Rect(x,470,180,140)
+            self.image = pygame.transform.scale(self.image, (170,130))
+            self.rect = pygame.Rect(x,440,170,130)
             self.n = n
         elif n==1:
             self.image = pygame.transform.scale(self.image, (140,100))
