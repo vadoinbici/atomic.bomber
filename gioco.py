@@ -382,18 +382,18 @@ while True:
                 exit()
             
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 #    vel_x = -4
                     acc_x = -0.5
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 #    vel_x = 4 
                     acc_x = 0.5
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 #    vel_y = 2
                     acc_y = 0.2
                     # if acc_y < 0.2:
                     #     acc_y += 0.1
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP or event.key == pygame.K_w:
                 #    vel_y = -2
                     acc_y = -0.2
                     # if acc_y > -0.2:
